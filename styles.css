@@ -10,7 +10,7 @@ body {
 
 /* 2) Page background (stretches to fill phone screen) */
 body {
-  background-image: url("assets/brankscape-bg.png");
+  background-image: url("assets/mobile_bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
