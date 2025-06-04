@@ -1,30 +1,64 @@
 /* styles.css */
 
+/* 1) Page background */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f0f2f5;
-  padding: 1rem;
+  padding: 0;
   background-image: url("assets/brankscape-bg.png");
-  background-size: cover;         /* scale to cover entire viewport */
-  background-position: center;    /* center horizontally & vertically */
-  background-repeat: no-repeat;   /* don’t tile the image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-header h1 {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
+/* 2) Optional overlay for contrast (uncomment if you include .overlay in HTML) */
+/*
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+*/
+
+/* 3) Content wrapper to sit above overlay (if used) */
+.content {
+  position: relative;
+  z-index: 2;
 }
 
-.skill-card {
+/* 4) Status display (Gold, Combat Level, Attack) */
+.status-display {
   max-width: 400px;
-  background: #fff;
+  margin: 0.5rem auto;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 0 auto 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-display span {
+  font-weight: bold;
+}
+
+/* 5) Skill card styling */
+.skill-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 1rem auto;
+  max-width: 400px;
   padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .skill-card h2 {
@@ -37,6 +71,7 @@ header h1 {
   font-size: 1rem;
 }
 
+/* 6) Action buttons inside cards */
 .actions button {
   display: block;
   width: 100%;
