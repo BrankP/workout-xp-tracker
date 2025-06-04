@@ -23,7 +23,7 @@ body {
 .content {
   position: relative;
   z-index: 2;
-  padding-top: 150px; /* push content down so that background’s “Brankscape” is the visible title */
+  padding-top: 250px; /* push content down so that background’s “Brankscape” is the visible title */
 }
 
 /* 4) Status display (Gold, Combat Level, Attack) – styled like OSRS info box */
