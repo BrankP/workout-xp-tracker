@@ -6,21 +6,25 @@
   <title>Workout XP Tracker</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Minimal styling for the GP display */
-    .gp-display {
+    /* Styling for the GP + Combat Level display */
+    .status-display {
       max-width: 400px;
       margin: 0.5rem auto;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1rem;
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       font-size: 1rem;
       text-align: center;
+      display: flex;
+      justify-content: space-between;
     }
-    .gp-display span {
+    .status-display span {
       font-weight: bold;
     }
+
+    /* Re-use your existing .skill-card / .actions / button styles from styles.css */
   </style>
 </head>
 <body>
@@ -28,9 +32,10 @@
     <h1>🏆 Workout XP Tracker</h1>
   </header>
 
-  <!-- Gold Pieces Display -->
-  <div class="gp-display">
-    Gold: <span id="gp-count">0</span> gp
+  <!-- GP + Combat Level Section -->
+  <div class="status-display">
+    <div>Gold: <span id="gp-count">0</span> gp</div>
+    <div>Combat Level: <span id="combat-level">1</span></div>
   </div>
 
   <!-- Strength Skill Card -->
