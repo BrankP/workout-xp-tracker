@@ -1,40 +1,32 @@
 // main.js
 
-// 1) XP curve: base = 100 XP for L1→2; each next level costs 1.1× previous.
+// 1) RuneScape-style XP curve (≈10.409% growth per level; base = 83)
 function xpNeededForLevel(level) {
-  // For Level 1→2, you need 83 XP:
   if (level <= 1) return 83;
-
-  // Otherwise, build up iteratively from 83, multiplying by ≈1.1040909 each step.
-  // (level = 2 means “XP needed to go from 2→3,” etc.)
   const GROWTH = 1.1040909;
-  let xp = 83; 
+  let xp = 83;
   for (let lv = 2; lv <= level; lv++) {
     xp = Math.floor(xp * GROWTH);
   }
   return xp;
 }
 
-// 2) DEFAULT_PROFILE: list every skill here. Any new skill must appear here.
+// 2) DEFAULT_PROFILE: list each skill with initial xp & level
 const DEFAULT_PROFILE = {
   strength: { xp: 0, level: 1 },
   agility:  { xp: 0, level: 1 },
-  // (If you add more skills later, add them here in the same format.)
+  // Add more skills here later if desired
 };
 
-// 3) Load from localStorage, merging with DEFAULT_PROFILE so new skills are auto‐initialized
+// 3) Load the skill profile from localStorage, merging with DEFAULT_PROFILE
 function loadProfile() {
   const raw = localStorage.getItem("workoutProfile");
   if (!raw) {
-    // No saved profile at all → use a fresh copy of DEFAULT_PROFILE
+    // No saved data → return a fresh deep copy of DEFAULT_PROFILE
     return JSON.parse(JSON.stringify(DEFAULT_PROFILE));
   }
-
-  // Merge saved values with defaults:
   const saved = JSON.parse(raw);
   const merged = {};
-
-  // For each skill in DEFAULT_PROFILE, if saved has it, use saved; otherwise use default
   Object.keys(DEFAULT_PROFILE).forEach((skillName) => {
     if (saved[skillName]) {
       merged[skillName] = saved[skillName];
@@ -42,16 +34,31 @@ function loadProfile() {
       merged[skillName] = { ...DEFAULT_PROFILE[skillName] };
     }
   });
-
   return merged;
 }
 
-// 4) Save the profile object back into localStorage
+// 4) Save the skill profile back to localStorage
 function saveProfile(profile) {
   localStorage.setItem("workoutProfile", JSON.stringify(profile));
 }
 
-// 5) Render one skill’s UI based on its name ("strength" or "agility") and data
+// 5) Load & save Gold Pieces (GP) from localStorage
+function loadGP() {
+  const raw = localStorage.getItem("workoutGP");
+  return raw ? parseInt(raw, 10) : 0;
+}
+function saveGP(gp) {
+  localStorage.setItem("workoutGP", gp);
+}
+
+// 6) Render the GP count into the DOM
+function renderGP() {
+  const gp = loadGP();
+  const el = document.getElementById("gp-count");
+  if (el) el.textContent = gp;
+}
+
+// 7) Render a single skill’s UI (level, xp, progress bar)
 function renderSkill(skillName, data) {
   const lvlEl  = document.getElementById(`${skillName}-level`);
   const xpEl   = document.getElementById(`${skillName}-xp`);
@@ -68,15 +75,16 @@ function renderSkill(skillName, data) {
   barEl.max           = needed;
 }
 
-// 6) Loop through all skills in the profile and render them
-function renderAllSkills() {
+// 8) Render all skills and the GP count
+function renderAll() {
   const profile = loadProfile();
   Object.entries(profile).forEach(([skillName, skillData]) => {
     renderSkill(skillName, skillData);
   });
+  renderGP();
 }
 
-// 7) Handle clicks on “award XP” buttons (works for any skill in DEFAULT_PROFILE)
+// 9) Handle clicks on any <button data-skill="…">: award XP and +1 gp
 function handleActionClick(event) {
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
@@ -84,31 +92,35 @@ function handleActionClick(event) {
   const skill = btn.dataset.skill;          // e.g. "strength" or "agility"
   const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 100, etc.
 
+  // 9a) Update GP
+  let gp = loadGP();
+  gp += 1;            // +1 gp per activity
+  saveGP(gp);
+
+  // 9b) Update XP & level for the clicked skill
   const profile = loadProfile();
   let { xp, level } = profile[skill];
-
-  // If already at max, do nothing
-  if (level >= 99) return;
-
-  xp += bonus;
-
-  // Level‐up loop
-  while (xp >= xpNeededForLevel(level) && level < 99) {
-    xp -= xpNeededForLevel(level);
-    level += 1;
-    if (level === 99) {
-      xp = 0; // cap XP at 0 when you hit Level 99
-      break;
+  if (level < 99) {
+    xp += bonus;
+    // Level‐up loop
+    while (xp >= xpNeededForLevel(level) && level < 99) {
+      xp -= xpNeededForLevel(level);
+      level += 1;
+      if (level === 99) {
+        xp = 0; // once at 99, cap xp to 0
+        break;
+      }
     }
+    profile[skill] = { xp, level };
+    saveProfile(profile);
   }
 
-  profile[skill] = { xp, level };
-  saveProfile(profile);
-  renderAllSkills();
+  // 9c) Re-render both skills and GP
+  renderAll();
 }
 
-// 8) On page load, render all skills and attach click listener
+// 10) On page load, render everything and attach the click listener
 document.addEventListener("DOMContentLoaded", () => {
-  renderAllSkills();
+  renderAll();
   document.body.addEventListener("click", handleActionClick);
 });
