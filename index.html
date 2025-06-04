@@ -6,7 +6,7 @@
   <title>Workout XP Tracker</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Styling for the GP + Combat Level display */
+    /* GP + Combat Level + Attack container */
     .status-display {
       max-width: 400px;
       margin: 0.5rem auto;
@@ -24,7 +24,10 @@
       font-weight: bold;
     }
 
-    /* Re-use your existing .skill-card / .actions / button styles from styles.css */
+    /* 
+      You can keep your .skill-card, .actions, button, etc. styles in styles.css. 
+      If you need quick defaults here, add them in the external CSS, not inline.
+    */
   </style>
 </head>
 <body>
@@ -32,10 +35,11 @@
     <h1>🏆 Workout XP Tracker</h1>
   </header>
 
-  <!-- GP + Combat Level Section -->
+  <!-- GP, Combat Level, and Attack Section -->
   <div class="status-display">
     <div>Gold: <span id="gp-count">0</span> gp</div>
     <div>Combat Level: <span id="combat-level">1</span></div>
+    <div>Attack: <span id="attack-count">1</span></div>
   </div>
 
   <!-- Strength Skill Card -->
@@ -62,6 +66,14 @@
       <button data-skill="agility" data-xp="100">2 KM Run (100 XP)</button>
       <button data-skill="agility" data-xp="500">5 KM Run (500 XP)</button>
       <button data-skill="agility" data-xp="1500">10 KM Run (1500 XP)</button>
+    </div>
+  </section>
+
+  <!-- Market Section (Spend GP to Increase Attack) -->
+  <section id="market-card" class="skill-card">
+    <h2>Market</h2>
+    <div class="actions">
+      <button id="upgrade-btn">Upgrade Weapon (Cost: 5 gp → +5 Attack)</button>
     </div>
   </section>
 
