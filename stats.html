@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brankscape • Stats</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="content">
+    <h1>Stats</h1>
+
+    <section class="skill-card">
+      <h2>Strength</h2>
+      <p>Level: <span id="strength-level">1</span> / 99</p>
+      <p>XP: <span id="strength-xp">0</span> / <span id="strength-xp-next">83</span></p>
+      <progress id="strength-bar" value="0" max="83" style="width: 100%;"></progress>
+    </section>
+
+    <section class="skill-card">
+      <h2>Agility</h2>
+      <p>Level: <span id="agility-level">1</span> / 99</p>
+      <p>XP: <span id="agility-xp">0</span> / <span id="agility-xp-next">83</span></p>
+      <progress id="agility-bar" value="0" max="83" style="width: 100%;"></progress>
+    </section>
+
+    <section class="skill-card">
+      <h2>Other Stats</h2>
+      <p>Gold: <span id="gp-count">0</span> gp</p>
+      <p>Attack: <span id="attack-count">1</span></p>
+      <p>Combat Level: <span id="combat-level">1</span></p>
+    </section>
+
+    <button class="back-btn" onclick="location.href='index.html'">← Back</button>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

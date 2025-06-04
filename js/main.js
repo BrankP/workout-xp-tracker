@@ -1,7 +1,7 @@
 // main.js
 
 // ─────────── RuneScape‐Style XP Curve ───────────
-// When level <= 1, xpNeededForLevel(1) = 83.
+// When level ≤ 1, xpNeededForLevel(1) = 83.
 // Otherwise, multiply by ~1.1040909 each step, floored.
 function xpNeededForLevel(level) {
   if (level <= 1) return 83;
@@ -89,6 +89,8 @@ function renderSkill(skillName, data) {
   const nextEl = document.getElementById(`${skillName}-xp-next`);
   const barEl  = document.getElementById(`${skillName}-bar`);
 
+  if (!lvlEl || !xpEl || !nextEl || !barEl) return; // skip if elements aren’t present
+
   const { level, xp } = data;
   const needed = xpNeededForLevel(level);
 
@@ -102,33 +104,42 @@ function renderSkill(skillName, data) {
 // Render Gold count
 function renderGP() {
   const el = document.getElementById("gp-count");
+  if (!el) return;
   el.textContent = loadGP();
 }
 
 // Render Combat Level (sum XP across all skills)
 function renderCombatLevel() {
+  const el = document.getElementById("combat-level");
+  if (!el) return;
   const profile = loadProfile();
   let totalXP = 0;
   Object.values(profile).forEach((skillData) => {
     totalXP += skillData.xp;
   });
   const cl = computeCombatLevel(totalXP);
-  document.getElementById("combat-level").textContent = cl;
+  el.textContent = cl;
 }
 
 // Render Attack
 function renderAttack() {
   const el = document.getElementById("attack-count");
+  if (!el) return;
   el.textContent = loadAttack();
 }
 
 // Render all pieces of data at once
 function renderAll() {
   const profile = loadProfile();
+  // Strength
   renderSkill("strength", profile.strength);
-  renderSkill("agility",  profile.agility);
+  // Agility
+  renderSkill("agility", profile.agility);
+  // GP
   renderGP();
+  // Combat Level
   renderCombatLevel();
+  // Attack
   renderAttack();
 }
 
@@ -147,20 +158,19 @@ function handleActionClick(event) {
       atk += 5;
       saveAttack(atk);
     }
-    // If gp < 5, do nothing (no negative gp allowed).
-    // Re-render everything either way, so the user sees updated gp/attack.
+    // Re-render everything
     renderAll();
     return;
   }
 
-  // 2) Exercise Buttons? (data-skill="..." data-xp="...")
+  // 2) Exercise or Run Buttons? (data-skill="strength" or "agility")
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
 
   const skill = btn.dataset.skill;           // e.g. "strength" or "agility"
-  const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 20, 100, etc.
+  const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 100, etc.
 
-  // Award 1 gp per exercise
+  // Award 1 gp per activity
   let gp = loadGP();
   gp += 1;
   saveGP(gp);
