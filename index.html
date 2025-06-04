@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
   <title>Workout XP Tracker</title>
+  <!-- If you have a styles.css, you can keep the link. Otherwise the page will still work without styling. -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
     <h1>🏆 Workout XP Tracker</h1>
   </header>
 
-  <!-- Example: Strength skill card -->
+  <!-- Strength Skill Card -->
   <section id="strength-card" class="skill-card">
     <h2>Strength</h2>
     <p>Level: <span id="strength-level">1</span> / 99</p>
@@ -21,10 +22,11 @@
     <div class="actions">
       <button data-skill="strength" data-xp="10">10 Push-Ups (10 XP)</button>
       <button data-skill="strength" data-xp="20">20 Squats (20 XP)</button>
-      <!-- Add more buttons or exercises here -->
+      <!-- Add more Strength-related buttons here -->
     </div>
   </section>
 
+  <!-- Agility Skill Card -->
   <section id="agility-card" class="skill-card">
     <h2>Agility</h2>
     <p>Level: <span id="agility-level">1</span> / 99</p>
@@ -32,20 +34,13 @@
     <progress id="agility-bar" value="0" max="100" style="width: 100%;"></progress>
 
     <div class="actions">
-      <button data-skill="agility" data-xp="100">2 KM (100 XP)</button>
-      <button data-skill="agility" data-xp="500">5 KM (500 XP)</button>
-      <button data-skill="agility" data-xp="1500">5 KM (1500 XP)</button>
-      <!-- Add more buttons or exercises here -->
+      <button data-skill="agility" data-xp="100">2 KM Run (100 XP)</button>
+      <button data-skill="agility" data-xp="500">5 KM Run (500 XP)</button>
+      <button data-skill="agility" data-xp="1500">10 KM Run (1500 XP)</button>
     </div>
   </section>
 
-  <!-- Repeat similar blocks for other skills: endurance, flexibility, etc. -->
-  <!-- e.g. 
-  <section id="endurance-card" class="skill-card">
-    ...
-  </section>
-  -->
-
+  <!-- Include your JavaScript at the end of the body -->
   <script src="main.js"></script>
 </body>
 </html>
