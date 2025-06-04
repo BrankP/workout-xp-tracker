@@ -4,25 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Workout XP Tracker</title>
-  <!-- If you have a styles.css, you can keep the link. Otherwise the page will still work without styling. -->
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Minimal styling for the GP display */
+    .gp-display {
+      max-width: 400px;
+      margin: 0.5rem auto;
+      padding: 0.5rem 1rem;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
+      text-align: center;
+    }
+    .gp-display span {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>🏆 Workout XP Tracker</h1>
   </header>
 
+  <!-- Gold Pieces Display -->
+  <div class="gp-display">
+    Gold: <span id="gp-count">0</span> gp
+  </div>
+
   <!-- Strength Skill Card -->
   <section id="strength-card" class="skill-card">
     <h2>Strength</h2>
     <p>Level: <span id="strength-level">1</span> / 99</p>
-    <p>XP: <span id="strength-xp">0</span> / <span id="strength-xp-next">100</span></p>
-    <progress id="strength-bar" value="0" max="100" style="width: 100%;"></progress>
+    <p>XP: <span id="strength-xp">0</span> / <span id="strength-xp-next">83</span></p>
+    <progress id="strength-bar" value="0" max="83" style="width: 100%;"></progress>
 
     <div class="actions">
-      <button data-skill="strength" data-xp="1000">10 Push-Ups (1000 XP)</button>
-      <button data-skill="strength" data-xp="1000">20 Squats (1000 XP)</button>
-      <!-- Add more Strength-related buttons here -->
+      <button data-skill="strength" data-xp="10">10 Push-Ups (10 XP)</button>
+      <button data-skill="strength" data-xp="20">20 Squats (20 XP)</button>
     </div>
   </section>
 
@@ -30,17 +50,16 @@
   <section id="agility-card" class="skill-card">
     <h2>Agility</h2>
     <p>Level: <span id="agility-level">1</span> / 99</p>
-    <p>XP: <span id="agility-xp">0</span> / <span id="agility-xp-next">100</span></p>
-    <progress id="agility-bar" value="0" max="100" style="width: 100%;"></progress>
+    <p>XP: <span id="agility-xp">0</span> / <span id="agility-xp-next">83</span></p>
+    <progress id="agility-bar" value="0" max="83" style="width: 100%;"></progress>
 
     <div class="actions">
-      <button data-skill="agility" data-xp="100">2 KM (100 XP)</button>
-      <button data-skill="agility" data-xp="500">5 KM (500 XP)</button>
-      <button data-skill="agility" data-xp="1500">10 KM (1500 XP)</button>
+      <button data-skill="agility" data-xp="100">2 KM Run (100 XP)</button>
+      <button data-skill="agility" data-xp="500">5 KM Run (500 XP)</button>
+      <button data-skill="agility" data-xp="1500">10 KM Run (1500 XP)</button>
     </div>
   </section>
 
-  <!-- Include your JavaScript at the end of the body -->
   <script src="main.js"></script>
 </body>
 </html>
