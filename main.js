@@ -2,8 +2,17 @@
 
 // 1) XP curve: base = 100 XP for L1→2; each next level costs 1.1× previous.
 function xpNeededForLevel(level) {
-  if (level <= 1) return 100;
-  return Math.floor(xpNeededForLevel(level - 1) * 1.1);
+  // For Level 1→2, you need 83 XP:
+  if (level <= 1) return 83;
+
+  // Otherwise, build up iteratively from 83, multiplying by ≈1.1040909 each step.
+  // (level = 2 means “XP needed to go from 2→3,” etc.)
+  const GROWTH = 1.1040909;
+  let xp = 83; 
+  for (let lv = 2; lv <= level; lv++) {
+    xp = Math.floor(xp * GROWTH);
+  }
+  return xp;
 }
 
 // 2) DEFAULT_PROFILE: list every skill here. Any new skill must appear here.
