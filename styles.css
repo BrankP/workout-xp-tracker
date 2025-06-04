@@ -14,8 +14,8 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  font-family: Arial, sans-serif;
-  color: #333;
+  font-family: "Courier New", Courier, monospace; /* pixel/monospace font for OSRS feel */
+  color: #000; /* default text color */
 }
 
 /* 3) Optional overlay for contrast (uncomment if you include .overlay in HTML) */
@@ -37,16 +37,18 @@ body {
   z-index: 2;
 }
 
-/* 5) Status display (Gold, Combat Level, Attack) */
+/* 5) Status display (Gold, Combat Level, Attack) – styled like OSRS info box */
 .status-display {
   max-width: 400px;
   margin: 0.5rem auto;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: #e0d9c2; /* OSRS–style beige */
+  border: 2px solid #543f1f; /* dark brown border */
+  border-top-color: #8b6d48; /* lighter top edge for bevel */
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f; /* slight drop shadow at bottom */
+  font-size: 0.95rem;
   text-align: center;
   display: flex;
   justify-content: space-between;
@@ -56,41 +58,78 @@ body {
   font-weight: bold;
 }
 
-/* 6) Skill card styling */
+/* 6) Skill card styling – emulate OSRS widget panel */
 .skill-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background: #e0d9c2; /* OSRS–style beige panel */
+  border: 2px solid #543f1f; /* dark brown border */
+  border-top-color: #8b6d48; /* lighter bevel top */
+  border-left-color: #8b6d48;
   margin: 1rem auto;
   max-width: 400px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f; /* small drop shadow */
 }
 
 .skill-card h2 {
-  margin-top: 0;
+  margin: 0 0 0.5rem 0;
   font-size: 1.25rem;
 }
 
 .skill-card p {
-  margin: 0.5rem 0;
+  margin: 0.4rem 0;
   font-size: 1rem;
 }
 
-/* 7) Action buttons inside cards */
+/* 7) Progress bar styling – OSRS–style thin red/grey bar */
+.skill-card progress {
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  margin: 0.4rem 0;
+}
+
+/* WebKit-based browsers */
+.skill-card progress::-webkit-progress-bar {
+  background-color: #c0b59e; /* light beige */
+  border: 1px solid #543f1f;
+  border-radius: 3px;
+}
+
+.skill-card progress::-webkit-progress-value {
+  background-color: #b01e0e; /* OSRS red */
+  border-radius: 2px;
+}
+
+/* Firefox */
+.skill-card progress::-moz-progress-bar {
+  background-color: #b01e0e;
+  border: 1px solid #543f1f;
+  border-radius: 3px;
+}
+
+/* 8) Action buttons inside cards – mimic OSRS button style */
 .actions button {
   display: block;
   width: 100%;
   margin: 0.5rem 0;
-  padding: 0.75rem;
+  padding: 0.6rem 0;
   font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  background: #0073aa;
-  color: #fff;
+  font-family: "Courier New", Courier, monospace;
+  background: #f4ebd0; /* slightly lighter beige */
+  color: #000;
+  border: 2px solid #543f1f;
+  border-top-color: #8b6d48;
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0 2px 0 #543f1f;
   cursor: pointer;
+  transition: background 0.1s ease-in-out, transform 0.05s;
 }
 
 .actions button:active {
-  background: #005177;
+  background: #d9c9b4; /* darker on click */
+  box-shadow: none;
+  transform: translateY(2px);
 }
