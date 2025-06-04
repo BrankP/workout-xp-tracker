@@ -10,6 +10,7 @@ function xpNeededForLevel(level) {
 // 2) Default profile structure: add more skills as needed.
 const DEFAULT_PROFILE = {
   strength: { xp: 0, level: 1 },
+  agility: { xp: 0, level: 1 },
   // e.g. endurance: { xp: 0, level: 1 }, flexibility: { xp: 0, level: 1 }, etc.
 };
 
