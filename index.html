@@ -8,13 +8,27 @@
 </head>
 <body>
   <div class="content">
+    <!-- Four main menu buttons -->
     <div class="menu-buttons">
       <button onclick="location.href='fight.html'">Fight</button>
       <button onclick="location.href='run.html'">Run</button>
       <button onclick="location.href='market.html'">Market</button>
       <button onclick="location.href='stats.html'">Stats</button>
     </div>
+
+    <!-- Health and Combat Level lines, directly under the buttons -->
+    <div class="landing-status">
+      <div class="status-item">
+        <img src="assets/heart.png" alt="Health Icon" class="icon" />
+        Health = 50/50
+      </div>
+      <div class="status-item">
+        <img src="assets/swords.png" alt="Combat Icon" class="icon" />
+        Combat Level = <span id="combat-level">1</span>
+      </div>
+    </div>
   </div>
+
   <script src="js/main.js"></script>
 </body>
 </html>
