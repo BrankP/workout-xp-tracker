@@ -5,6 +5,10 @@ body {
   font-family: Arial, sans-serif;
   background: #f0f2f5;
   padding: 1rem;
+  background-image: url("assets/brankscape-bg.png");
+  background-size: cover;         /* scale to cover entire viewport */
+  background-position: center;    /* center horizontally & vertically */
+  background-repeat: no-repeat;   /* don’t tile the image */
 }
 
 header h1 {
