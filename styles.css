@@ -1,10 +1,10 @@
 /* styles.css */
 
-/* 1) Make <html> and <body> span the full viewport height */
+/* 1) Make <html> and <body> span the full viewport */
 html,
 body {
-  height: 100%;
   width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -43,7 +43,7 @@ body {
   max-width: 400px;
   margin: 0.5rem auto;
   padding: 0.5rem 0.75rem;
-  background: #e0d9c2; /* OSRS–style beige */
+  background: rgba(224, 217, 194, 0.8); /* OSRS–style beige at 80% opacity */
   border: 2px solid #543f1f; /* dark brown border */
   border-top-color: #8b6d48; /* lighter top edge for bevel */
   border-left-color: #8b6d48;
@@ -61,7 +61,7 @@ body {
 
 /* 6) Skill card styling – emulate OSRS widget panel */
 .skill-card {
-  background: #e0d9c2; /* OSRS–style beige panel */
+  background: rgba(224, 217, 194, 0.8); /* OSRS–style beige panel at 80% opacity */
   border: 2px solid #543f1f; /* dark brown border */
   border-top-color: #8b6d48; /* lighter bevel top */
   border-left-color: #8b6d48;
@@ -117,7 +117,7 @@ body {
   padding: 0.6rem 0;
   font-size: 1rem;
   font-family: "Courier New", Courier, monospace;
-  background: #f4ebd0; /* slightly lighter beige */
+  background: rgba(244, 235, 208, 0.8); /* slightly lighter beige at 80% opacity */
   color: #000;
   border: 2px solid #543f1f;
   border-top-color: #8b6d48;
@@ -130,7 +130,7 @@ body {
 }
 
 .actions button:active {
-  background: #d9c9b4; /* darker on click */
+  background: rgba(217, 201, 180, 0.8); /* darker on click at 80% opacity */
   box-shadow: none;
   transform: translateY(2px);
 }
