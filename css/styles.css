@@ -188,3 +188,18 @@ body {
   height: 24px;
   image-rendering: pixelated; /* sharper for pixel art */
 }
+
+/* Monster stats laid out in a 2×2 grid */
+.monster-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two equal-width columns */
+  grid-template-rows: auto auto;   /* two rows, height by content */
+  gap: 0.25rem 1rem;               /* small vertical gap, larger horizontal gap */
+  margin-top: 0.5rem;              /* optional spacing above the block */
+}
+
+/* Optionally make each <p> a bit more compact/mobile-friendly */
+.monster-stats p {
+  margin: 0.25rem 0;  /* less vertical margin */
+  font-size: 0.95rem;
+}
