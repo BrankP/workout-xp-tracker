@@ -147,30 +147,30 @@ function calculateDamage() {
   const burpees      = parseInt(document.getElementById("burpees-slider").value, 10);
   const jumpingjacks = parseInt(document.getElementById("jumpingjacks-slider").value, 10);
 
-  const sliderReps = pushups + squats + lunges + situps + burpees + jumpingjacks;
+  const sliderReps   = pushups + squats + lunges + situps + burpees + jumpingjacks;
   const sliderDamage = sliderReps / 10;          // each 10 reps = 1 damage
   const userAttack   = loadAttack();             // fetch user’s Attack stat
 
-  const totalDamage = sliderDamage + userAttack; // actual damage used for combat
-
+  // Update the display to show "sliderDamage (+ userAttack)"
   const dmgEl = document.getElementById("damage-value");
   if (dmgEl) {
-    // Display "sliderDamage (+userAttack)"
     dmgEl.textContent = `${sliderDamage} (+${userAttack})`;
   }
 
-  return totalDamage; // function returns combined damage for comparison
+  return sliderDamage + userAttack; // return combined damage for HP checking
 }
 
 // ─────────── 10) CLICK HANDLER ───────────
 function handleActionClick(event) {
-  // 10a) Market Upgrade Button
+  // 10a) Market Upgrade Button?
   const upgradeBtn = event.target.closest("#upgrade-btn");
   if (upgradeBtn) {
     let gp = loadGP();
     if (gp >= 5) {
       gp -= 5;
       saveGP(gp);
+
+      // Increase user's attack stat by 5
       let atk = loadAttack();
       atk += 5;
       saveAttack(atk);
@@ -195,17 +195,20 @@ function handleActionClick(event) {
       const monsterIndex = parseInt(m.value, 10);
       const monster      = MONSTERS[monsterIndex] || MONSTERS[0];
 
-      // 2) Award GP: +6 for 6 exercise sliders, +1 for monster defeat
+      // 2) Compute combined damage (sliderDamage + userAttack)
+      const totalDamage = calculateDamage();
+
+      // 3) Award GP: +6 for the six exercise sliders
       let gp = loadGP();
       gp += 6;
-      // Compute combined damage now (which includes userAttack)
-      const totalDamage = calculateDamage();
+
+      // If monster is defeated, give +1 gp for monster defeat
       if (totalDamage >= monster.hp) {
-        gp += 1; // +1 gp for defeating the monster
+        gp += 1;
       }
       saveGP(gp);
 
-      // 3) Award Strength XP = sum of all reps
+      // 4) Award Strength XP = sum of all reps
       const repXP =
         parseInt(p.value, 10) +
         parseInt(s.value, 10) +
@@ -227,7 +230,7 @@ function handleActionClick(event) {
       }
       profile.strength = { xp: strXP, level: strLevel };
 
-      // 4) If monster is defeated, award monster.xp to Slayer
+      // 5) If monster is defeated, award monster.xp to Slayer
       if (totalDamage >= monster.hp) {
         let { xp: slayerXP, level: slayerLevel } = profile.slayer;
         slayerXP += monster.xp;
@@ -244,7 +247,7 @@ function handleActionClick(event) {
 
       saveProfile(profile);
 
-      // 5) Reset all sliders & labels back to 10
+      // 6) Reset all six exercise sliders to 10 (and update their labels)
       p.value = 10;  document.getElementById("pushups-value").textContent      = "10";
       s.value = 10;  document.getElementById("squats-value").textContent       = "10";
       l.value = 10;  document.getElementById("lunges-value").textContent       = "10";
@@ -252,7 +255,7 @@ function handleActionClick(event) {
       b.value = 10;  document.getElementById("burpees-value").textContent      = "10";
       j.value = 10;  document.getElementById("jumpingjacks-value").textContent = "10";
 
-      // Reset monster slider to index 0 (Chicken) & update stats
+      // 7) Reset monster slider to index 0 (Chicken) & update its stats
       m.value = 0;
       document.getElementById("monster-name").textContent = MONSTERS[0].name;
       document.getElementById("monster-cl").textContent   = MONSTERS[0].combatLevel;
@@ -260,7 +263,7 @@ function handleActionClick(event) {
       document.getElementById("monster-xp").textContent   = MONSTERS[0].xp;
       document.getElementById("monster-atk").textContent  = MONSTERS[0].attack;
 
-      // Recalculate damage display (now 6 sliders × 10 reps = 60 reps → 60/10 = 6, so “6 (+userAttack)”)
+      // 8) Recalculate Damage display (now 6 sliders × 10 reps = 60 reps → 60/10 = 6, plus userAttack)
       calculateDamage();
     }
 
@@ -268,17 +271,20 @@ function handleActionClick(event) {
     return;
   }
 
-  // 10c) Exercise or Run Buttons on other pages
+  // 10c) “data-skill” buttons (Run‐page and any future buttons)
+  // This catches <button data-skill="agility" data-xp="10"> etc.
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
 
-  const skill = btn.dataset.skill;
-  const bonus = parseInt(btn.dataset.xp, 10);
+  const skill = btn.dataset.skill;           // e.g. "agility" or "strength"
+  const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 20, etc.
 
-  let gp = loadGP();
-  gp += 1;
-  saveGP(gp);
+  // Award 1 gp for each click
+  let gp2 = loadGP();
+  gp2 += 1;
+  saveGP(gp2);
 
+  // Award XP & handle level‐ups for that skill
   const profile2 = loadProfile();
   let { xp, level } = profile2[skill];
   if (level < 99) {
@@ -287,7 +293,7 @@ function handleActionClick(event) {
       xp -= xpNeededForLevel(level);
       level += 1;
       if (level === 99) {
-        xp = 0;
+        xp = 0; // cap XP once you hit 99
         break;
       }
     }
@@ -298,7 +304,7 @@ function handleActionClick(event) {
   renderAll();
 }
 
-// ─────────── 11) INITIALIZE SLIDERS, DAMAGE, MONSTER ───────────
+// ─────────── 11) INITIALIZE SLIDERS & MONSTER ───────────
 function initSlidersAndMonster() {
   const pushupsSlider      = document.getElementById("pushups-slider");
   const squatsSlider       = document.getElementById("squats-slider");
@@ -308,6 +314,7 @@ function initSlidersAndMonster() {
   const jumpingjacksSlider = document.getElementById("jumpingjacks-slider");
   const monsterSlider      = document.getElementById("monster-slider");
 
+  // Attach a listener to each exercise slider so its label updates and Damage recalculates
   function attachLabelListener(sliderId, labelId) {
     const slider = document.getElementById(sliderId);
     if (!slider) return;
@@ -325,6 +332,7 @@ function initSlidersAndMonster() {
   attachLabelListener("burpees-slider",      "burpees-value");
   attachLabelListener("jumpingjacks-slider", "jumpingjacks-value");
 
+  // Monster slider updates name & stats on 'change' only
   if (monsterSlider) {
     monsterSlider.addEventListener("change", (e) => {
       const idx = parseInt(e.target.value, 10);
@@ -345,7 +353,7 @@ function initSlidersAndMonster() {
     });
   }
 
-  // Initialize damage display on-load
+  // On first load, calculate Damage so it shows "6 (+userAttack)" correctly
   calculateDamage();
 }
 
