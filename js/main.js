@@ -163,14 +163,50 @@ function handleActionClick(event) {
     return;
   }
 
-  // 2) Exercise or Run Buttons? (data-skill="strength" or "agility")
+  // 2) “Go” button on fight page? (aggregated slider logic)
+  const goBtn = event.target.closest("#go-btn");
+  if (goBtn) {
+    const pushupsSlider = document.getElementById("pushups-slider");
+    const squatsSlider  = document.getElementById("squats-slider");
+    if (pushupsSlider && squatsSlider) {
+      const pushupsCount = parseInt(pushupsSlider.value, 10);
+      const squatsCount  = parseInt(squatsSlider.value, 10);
+
+      // Award 2 gp (one for push-ups, one for squats)
+      let gp = loadGP();
+      gp += 2;
+      saveGP(gp);
+
+      // Award Strength XP = pushupsCount + squatsCount
+      const totalXP = pushupsCount + squatsCount;
+      const profile = loadProfile();
+      let { xp, level } = profile.strength;
+
+      xp += totalXP;
+      // Level‐up loop
+      while (xp >= xpNeededForLevel(level) && level < 99) {
+        xp -= xpNeededForLevel(level);
+        level += 1;
+        if (level === 99) {
+          xp = 0; // cap XP at 0 once you hit level 99
+          break;
+        }
+      }
+      profile.strength = { xp, level };
+      saveProfile(profile);
+    }
+    renderAll();
+    return;
+  }
+
+  // 3) Exercise or Run Buttons? (data-skill="strength" or "agility")
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
 
   const skill = btn.dataset.skill;           // e.g. "strength" or "agility"
   const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 100, etc.
 
-  // Award 1 gp per activity
+  // Award 1 gp per exercise/run
   let gp = loadGP();
   gp += 1;
   saveGP(gp);
@@ -196,9 +232,29 @@ function handleActionClick(event) {
   renderAll();
 }
 
+// ─────────── Slider Label Updates ───────────
+function initSliders() {
+  const pushupsSlider = document.getElementById("pushups-slider");
+  const squatsSlider  = document.getElementById("squats-slider");
+
+  if (pushupsSlider) {
+    pushupsSlider.addEventListener("input", (e) => {
+      const valSpan = document.getElementById("pushups-value");
+      if (valSpan) valSpan.textContent = e.target.value;
+    });
+  }
+  if (squatsSlider) {
+    squatsSlider.addEventListener("input", (e) => {
+      const valSpan = document.getElementById("squats-value");
+      if (valSpan) valSpan.textContent = e.target.value;
+    });
+  }
+}
+
 // ─────────── Initialization on Page Load ───────────
 
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
+  initSliders();
   document.body.addEventListener("click", handleActionClick);
 });
