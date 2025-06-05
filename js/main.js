@@ -162,21 +162,28 @@ function calculateDamage() {
 
 // ─────────── 10) CLICK HANDLER ───────────
 function handleActionClick(event) {
-  // 10a) Market Upgrade Button
+  // 10a) Market “Upgrade Weapon” button
   const upgradeBtn = event.target.closest("#upgrade-btn");
-  if (upgradeBtn) {
-    let gp = loadGP();
-    if (gp >= 5) {
-      gp -= 5;
-      saveGP(gp);
-
-      // Increase user's attack stat by 5
-      let atk = loadAttack();
-      atk += 5;
-      saveAttack(atk);
-    }
-    renderAll();
-    return;
+    if (upgradeBtn) {
+      let gp = loadGP();
+      console.log("DEBUG: current GP =", gp); // see what loadGP() is returning
+    
+      if (gp >= 5) {
+        // Spend 5 gp, gain +5 Attack
+        gp -= 5;
+        saveGP(gp);
+    
+        let atk = loadAttack();
+        atk += 5;
+        saveAttack(atk);
+    
+        console.log("DEBUG: spent 5 gp → new GP =", gp, "new Attack =", atk);
+      } else {
+        alert(`Not enough gp to upgrade! You currently have only ${gp} gp.`);
+      }
+    
+      renderAll();
+      return;
   }
 
   // 10b) Attack Button on Fight Page
