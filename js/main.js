@@ -1,7 +1,6 @@
 // main.js
 
 // ─────────── 1) MONSTERS ARRAY ───────────
-// Index 0 = Chicken; index 9 = TzTok-Jad.
 const MONSTERS = [
   { name: "Chicken",          combatLevel: 1,   hp: 5,    xp: 50,     attack: 1  },
   { name: "Goblin",           combatLevel: 3,   hp: 20,   xp: 100,    attack: 2  },
@@ -16,8 +15,6 @@ const MONSTERS = [
 ];
 
 // ─────────── 2) RuneScape‐Style XP Curve ───────────
-// When level ≤ 1, xpNeededForLevel(1) = 83.
-// Otherwise, multiply by ~1.1040909 each step, floored.
 function xpNeededForLevel(level) {
   if (level <= 1) return 83;
   let xp = 83;
@@ -27,7 +24,6 @@ function xpNeededForLevel(level) {
   return xp;
 }
 
-// Combat Level = smallest L (1 ≤ L ≤ 99) such that xpNeededForLevel(L) > totalXP
 function computeCombatLevel(totalXP) {
   for (let lvl = 1; lvl <= 99; lvl++) {
     if (xpNeededForLevel(lvl) > totalXP) {
@@ -95,19 +91,14 @@ function saveAttack(atk) {
 }
 
 // ─────────── 8) Rendering Functions ───────────
-
-// Render a single skill’s card (level, xp, xp to next level, progress bar)
 function renderSkill(skillName, data) {
   const lvlEl  = document.getElementById(`${skillName}-level`);
   const xpEl   = document.getElementById(`${skillName}-xp`);
   const nextEl = document.getElementById(`${skillName}-xp-next`);
   const barEl  = document.getElementById(`${skillName}-bar`);
-
   if (!lvlEl || !xpEl || !nextEl || !barEl) return;
-
   const { level, xp } = data;
   const needed = xpNeededForLevel(level);
-
   lvlEl.textContent   = level;
   xpEl.textContent    = xp;
   nextEl.textContent  = needed;
@@ -115,14 +106,12 @@ function renderSkill(skillName, data) {
   barEl.max           = needed;
 }
 
-// Render Gold count
 function renderGP() {
   const el = document.getElementById("gp-count");
   if (!el) return;
   el.textContent = loadGP();
 }
 
-// Render Combat Level (sum XP across all skills)
 function renderCombatLevel() {
   const el = document.getElementById("combat-level");
   if (!el) return;
@@ -135,14 +124,12 @@ function renderCombatLevel() {
   el.textContent = cl;
 }
 
-// Render Attack
 function renderAttack() {
   const el = document.getElementById("attack-count");
   if (!el) return;
   el.textContent = loadAttack();
 }
 
-// Render all pieces of data at once (strength, agility, slayer, gp, etc.)
 function renderAll() {
   const profile = loadProfile();
   renderSkill("strength", profile.strength);
@@ -153,17 +140,30 @@ function renderAll() {
   renderAttack();
 }
 
-// ─────────── 9) Click Handler ───────────
+// ─────────── 9) Calculate Damage (Sum of all sliders ÷ 10) ───────────
+function calculateDamage() {
+  const pushups     = parseInt(document.getElementById("pushups-slider").value, 10);
+  const squats      = parseInt(document.getElementById("squats-slider").value, 10);
+  const lunges      = parseInt(document.getElementById("lunges-slider").value, 10);
+  const situps      = parseInt(document.getElementById("situps-slider").value, 10);
+  const burpees     = parseInt(document.getElementById("burpees-slider").value, 10);
+  const jumpingjacks= parseInt(document.getElementById("jumpingjacks-slider").value, 10);
 
+  const totalReps = pushups + squats + lunges + situps + burpees + jumpingjacks;
+  const damage    = totalReps / 10;
+  document.getElementById("damage-value").textContent = damage;
+  return damage;
+}
+
+// ─────────── 10) Click Handler ───────────
 function handleActionClick(event) {
-  // 9a) Market Upgrade Button? (spend 5 gp → +5 attack)
+  // 10a) Market Upgrade Button? (spend 5 gp → +5 attack)
   const upgradeBtn = event.target.closest("#upgrade-btn");
   if (upgradeBtn) {
     let gp = loadGP();
     if (gp >= 5) {
       gp -= 5;
       saveGP(gp);
-
       let atk = loadAttack();
       atk += 5;
       saveAttack(atk);
@@ -172,40 +172,47 @@ function handleActionClick(event) {
     return;
   }
 
-  // 9b) “Attack” button on fight page? (aggregated slider + monster logic)
+  // 10b) “Attack” button on fight page
   const goBtn = event.target.closest("#go-btn");
   if (goBtn) {
-    const pushupsSlider = document.getElementById("pushups-slider");
-    const squatsSlider  = document.getElementById("squats-slider");
-    const monsterSlider = document.getElementById("monster-slider");
+    const pushupsSlider     = document.getElementById("pushups-slider");
+    const squatsSlider      = document.getElementById("squats-slider");
+    const lungesSlider      = document.getElementById("lunges-slider");
+    const situpsSlider      = document.getElementById("situps-slider");
+    const burpeesSlider     = document.getElementById("burpees-slider");
+    const jumpingjacksSlider= document.getElementById("jumpingjacks-slider");
+    const monsterSlider     = document.getElementById("monster-slider");
 
-    if (pushupsSlider && squatsSlider && monsterSlider) {
-      const pushupsCount = parseInt(pushupsSlider.value, 10);
-      const squatsCount  = parseInt(squatsSlider.value, 10);
-
-      // 1) Determine which monster is selected
+    if (
+      pushupsSlider &&
+      squatsSlider &&
+      lungesSlider &&
+      situpsSlider &&
+      burpeesSlider &&
+      jumpingjacksSlider &&
+      monsterSlider
+    ) {
+      // 1) Determine monster
       const monsterIndex = parseInt(monsterSlider.value, 10);
       const monster      = MONSTERS[monsterIndex] || MONSTERS[0];
 
-      // 2) Award gp:
-      //    • +2 gp for doing both exercise types (push-ups + squats)
-      //    • +1 gp for killing the monster
+      // 2) Award gp
       let gp = loadGP();
-      gp += 2;     // one gp per exercise type
-      gp += 1;     // one gp for monster defeat
+      gp += 6; // 1 gp for each exercise type (6 sliders)
+      gp += 1; // +1 gp for defeating the monster
       saveGP(gp);
 
-      // 3) Compute total Strength XP from reps:
-      const repXP = pushupsCount + squatsCount;
+      // 3) Award Strength XP = sum of all reps
+      const repXP = 
+        parseInt(pushupsSlider.value, 10) +
+        parseInt(squatsSlider.value, 10) +
+        parseInt(lungesSlider.value, 10) +
+        parseInt(situpsSlider.value, 10) +
+        parseInt(burpeesSlider.value, 10) +
+        parseInt(jumpingjacksSlider.value, 10);
 
-      // 4) Compute damage to monster: each 10 reps = 1 damage
-      const totalReps = pushupsCount + squatsCount;
-      const damage    = totalReps / 10;
-
-      // 5) Award Strength XP:
       const profile = loadProfile();
       let { xp: strXP, level: strLevel } = profile.strength;
-
       strXP += repXP;
       while (strXP >= xpNeededForLevel(strLevel) && strLevel < 99) {
         strXP -= xpNeededForLevel(strLevel);
@@ -217,7 +224,8 @@ function handleActionClick(event) {
       }
       profile.strength = { xp: strXP, level: strLevel };
 
-      // 6) If monster is defeated, award monster.xp to Slayer:
+      // 4) Compute damage and check monster HP
+      const damage = calculateDamage();
       if (damage >= monster.hp) {
         let { xp: slayerXP, level: slayerLevel } = profile.slayer;
         slayerXP += monster.xp;
@@ -232,42 +240,51 @@ function handleActionClick(event) {
         profile.slayer = { xp: slayerXP, level: slayerLevel };
       }
 
-      // 7) Save updated profile
       saveProfile(profile);
 
-      // 8) Reset sliders & labels, and reset monster slider to 0 (Chicken)
-      pushupsSlider.value = 10;
-      squatsSlider.value  = 10;
-      document.getElementById("pushups-value").textContent = "10";
-      document.getElementById("squats-value").textContent  = "10";
+      // 5) Reset all sliders & labels
+      pushupsSlider.value      = 10;
+      squatsSlider.value       = 10;
+      lungesSlider.value       = 10;
+      situpsSlider.value       = 10;
+      burpeesSlider.value      = 10;
+      jumpingjacksSlider.value = 10;
+      document.getElementById("pushups-value").textContent      = "10";
+      document.getElementById("squats-value").textContent       = "10";
+      document.getElementById("lunges-value").textContent       = "10";
+      document.getElementById("situps-value").textContent       = "10";
+      document.getElementById("burpees-value").textContent      = "10";
+      document.getElementById("jumpingjacks-value").textContent = "10";
 
+      // Reset monster slider back to index 0 (Chicken)
       monsterSlider.value = 0;
       document.getElementById("monster-name").textContent = MONSTERS[0].name;
       document.getElementById("monster-cl").textContent   = MONSTERS[0].combatLevel;
       document.getElementById("monster-hp").textContent   = MONSTERS[0].hp;
       document.getElementById("monster-xp").textContent   = MONSTERS[0].xp;
       document.getElementById("monster-atk").textContent  = MONSTERS[0].attack;
+
+      // Recalculate damage display (will now be 6 reps / 10 = 0 for 6×10?)
+      calculateDamage();
     }
 
     renderAll();
     return;
   }
 
-  // 9c) Exercise or Run Buttons? (data-skill="strength" or "agility")
+  // 10c) Other buttons with data-skill (Strength/Agility on Run page)
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
 
-  const skill = btn.dataset.skill;           // "strength"/"agility"
-  const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 100, etc.
+  const skill = btn.dataset.skill;
+  const bonus = parseInt(btn.dataset.xp, 10);
 
-  // Award 1 gp per exercise/run
   let gp = loadGP();
   gp += 1;
   saveGP(gp);
 
-  // Award XP & handle level-ups for that skill
-  const profile = loadProfile();
-  let { xp, level } = profile[skill];
+  const profile2 = loadProfile();
+  let { xp, level } = profile2[skill];
   if (level < 99) {
     xp += bonus;
     while (xp >= xpNeededForLevel(level) && level < 99) {
@@ -278,43 +295,51 @@ function handleActionClick(event) {
         break;
       }
     }
-    profile[skill] = { xp, level };
-    saveProfile(profile);
+    profile2[skill] = { xp, level };
+    saveProfile(profile2);
   }
 
   renderAll();
 }
 
-// ─────────── 10) Slider & Monster‐Label Initialization ───────────
-
+// ─────────── 11) Initialize Sliders, Damage, and Monster Updates ───────────
 function initSlidersAndMonster() {
-  const pushupsSlider = document.getElementById("pushups-slider");
-  const squatsSlider  = document.getElementById("squats-slider");
-  const monsterSlider = document.getElementById("monster-slider");
+  const pushupsSlider      = document.getElementById("pushups-slider");
+  const squatsSlider       = document.getElementById("squats-slider");
+  const lungesSlider       = document.getElementById("lunges-slider");
+  const situpsSlider       = document.getElementById("situps-slider");
+  const burpeesSlider      = document.getElementById("burpees-slider");
+  const jumpingjacksSlider = document.getElementById("jumpingjacks-slider");
+  const monsterSlider      = document.getElementById("monster-slider");
 
-  if (pushupsSlider) {
-    pushupsSlider.addEventListener("input", (e) => {
-      const valSpan = document.getElementById("pushups-value");
+  // Helper to attach an 'input' listener to any slider + update its label
+  function attachLabelListener(sliderId, labelId) {
+    const slider = document.getElementById(sliderId);
+    if (!slider) return;
+    slider.addEventListener("input", (e) => {
+      const valSpan = document.getElementById(labelId);
       if (valSpan) valSpan.textContent = e.target.value;
+      calculateDamage();
     });
   }
-  if (squatsSlider) {
-    squatsSlider.addEventListener("input", (e) => {
-      const valSpan = document.getElementById("squats-value");
-      if (valSpan) valSpan.textContent = e.target.value;
-    });
-  }
+
+  // Attach to all six exercise sliders:
+  attachLabelListener("pushups-slider",      "pushups-value");
+  attachLabelListener("squats-slider",       "squats-value");
+  attachLabelListener("lunges-slider",       "lunges-value");
+  attachLabelListener("situps-slider",       "situps-value");
+  attachLabelListener("burpees-slider",      "burpees-value");
+  attachLabelListener("jumpingjacks-slider", "jumpingjacks-value");
+
+  // Monster slider: update name & stats when changed (on 'change' event)
   if (monsterSlider) {
-    // Change to 'change' so stats update only after user releases slider
     monsterSlider.addEventListener("change", (e) => {
       const idx = parseInt(e.target.value, 10);
       const mon = MONSTERS[idx] || MONSTERS[0];
 
-      // Update monster name
       const nameSpan = document.getElementById("monster-name");
       if (nameSpan) nameSpan.textContent = mon.name;
 
-      // Update each stat line
       const clSpan  = document.getElementById("monster-cl");
       const hpSpan  = document.getElementById("monster-hp");
       const xpSpan  = document.getElementById("monster-xp");
@@ -326,10 +351,12 @@ function initSlidersAndMonster() {
       if (atkSpan) atkSpan.textContent = mon.attack;
     });
   }
+
+  // Initialize damage display once on load
+  calculateDamage();
 }
 
-// ─────────── 11) Initialization on Page Load ───────────
-
+// ─────────── 12) Initialization on Page Load ───────────
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
   initSlidersAndMonster();
