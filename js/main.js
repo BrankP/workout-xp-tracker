@@ -283,7 +283,7 @@ function initSlidersAndMonster() {
     });
   }
   if (monsterSlider) {
-    monsterSlider.addEventListener("input", (e) => {
+    monsterSlider.addEventListener("change", (e) => {
       const idx = parseInt(e.target.value, 10);
       const mon = MONSTERS[idx] || MONSTERS[0];
 
