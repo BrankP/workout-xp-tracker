@@ -8,7 +8,32 @@
 </head>
 <body>
   <div class="content">
-    <!-- Strength Exercises Header -->
+    <!-- Monster Selection -->
+    <section class="skill-card">
+      <h2>Select Monster</h2>
+      <div class="slider-group">
+        <label for="monster-slider">
+          Monster: <span id="monster-name">Chicken</span>
+        </label>
+        <input
+          type="range"
+          id="monster-slider"
+          min="0"
+          max="9"
+          step="1"
+          value="0"
+        />
+      </div>
+      <!-- Display the monster’s stats: -->
+      <p>CL: <span id="monster-cl">1</span>,
+         HP: <span id="monster-hp">5</span>,
+         XP: <span id="monster-xp">50</span>,
+         ATK: <span id="monster-atk">1</span>
+      </p>
+      
+    </section>
+
+    <!-- Strength Exercises (Push-Ups & Squats) -->
     <section class="skill-card">
       <h2>Strength Exercises</h2>
 
