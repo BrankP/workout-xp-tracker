@@ -194,6 +194,12 @@ function handleActionClick(event) {
       }
       profile.strength = { xp, level };
       saveProfile(profile);
+
+      // Reset sliders to default (10) and update labels
+      pushupsSlider.value = 10;
+      squatsSlider.value  = 10;
+      document.getElementById("pushups-value").textContent = "10";
+      document.getElementById("squats-value").textContent  = "10";
     }
     renderAll();
     return;
