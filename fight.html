@@ -8,17 +8,48 @@
 </head>
 <body>
   <div class="content">
+    <!-- Strength Exercises Header -->
     <section class="skill-card">
       <h2>Strength Exercises</h2>
+
+      <!-- Push-Ups Slider -->
+      <div class="slider-group">
+        <label for="pushups-slider">Push-ups: <span id="pushups-value">10</span></label>
+        <input
+          type="range"
+          id="pushups-slider"
+          min="10"
+          max="50"
+          step="10"
+          value="10"
+        />
+      </div>
+
+      <!-- Squats Slider -->
+      <div class="slider-group">
+        <label for="squats-slider">Squats: <span id="squats-value">10</span></label>
+        <input
+          type="range"
+          id="squats-slider"
+          min="10"
+          max="50"
+          step="10"
+          value="10"
+        />
+      </div>
+
+      <!-- Go Button -->
       <div class="actions">
-        <button data-skill="strength" data-xp="10">10 Push-Ups (10 XP)</button>
-        <button data-skill="strength" data-xp="20">20 Squats (20 XP)</button>
-        <button data-skill="strength" data-xp="15">15 Lunges (15 XP)</button>
-        <button data-skill="strength" data-xp="30">30 Sit-Ups (30 XP)</button>
+        <button id="go-btn">Go</button>
       </div>
     </section>
-    <button class="back-btn" onclick="location.href='index.html'">← Back</button>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="location.href='index.html'">
+      ← Back
+    </button>
   </div>
+
   <script src="js/main.js"></script>
 </body>
 </html>
