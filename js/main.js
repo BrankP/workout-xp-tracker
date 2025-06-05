@@ -264,8 +264,7 @@ function handleActionClick(event) {
   renderAll();
 }
 
-// ─────────── 10) Slider & Monster‐Label Initialization ───────────
-
+// ─────────── initSlidersAndMonster() ───────────
 function initSlidersAndMonster() {
   const pushupsSlider = document.getElementById("pushups-slider");
   const squatsSlider  = document.getElementById("squats-slider");
@@ -287,14 +286,21 @@ function initSlidersAndMonster() {
     monsterSlider.addEventListener("input", (e) => {
       const idx = parseInt(e.target.value, 10);
       const mon = MONSTERS[idx] || MONSTERS[0];
+
+      // Update the displayed monster name
       const nameSpan = document.getElementById("monster-name");
       if (nameSpan) nameSpan.textContent = mon.name;
 
-      // If you want to also update monster stats on the page, e.g.:
-      // document.getElementById("monster-cl").textContent = mon.combatLevel;
-      // document.getElementById("monster-hp").textContent = mon.hp;
-      // document.getElementById("monster-xp").textContent = mon.xp;
-      // document.getElementById("monster-atk").textContent = mon.attack;
+      // Update each individual stat on its own line:
+      const clSpan = document.getElementById("monster-cl");
+      const hpSpan = document.getElementById("monster-hp");
+      const xpSpan = document.getElementById("monster-xp");
+      const atkSpan = document.getElementById("monster-atk");
+
+      if (clSpan) clSpan.textContent = mon.combatLevel;
+      if (hpSpan) hpSpan.textContent = mon.hp;
+      if (xpSpan) xpSpan.textContent = mon.xp;
+      if (atkSpan) atkSpan.textContent = mon.attack;
     });
   }
 }
