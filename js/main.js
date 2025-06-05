@@ -2,19 +2,17 @@
 
 // ─────────── 1) MONSTERS ARRAY ───────────
 // Index 0 = Chicken; index 9 = TzTok-Jad.
-// Feel free to adjust HP, XP, attack values as desired.
-
 const MONSTERS = [
-  { name: "Chicken",       combatLevel: 1,  hp: 5,   xp: 50,    attack: 1  },
-  { name: "Goblin",        combatLevel: 3,  hp: 20,  xp: 100,   attack: 2  },
-  { name: "Skeleton",      combatLevel: 8,  hp: 40,  xp: 200,   attack: 4  },
-  { name: "Zombie",        combatLevel: 15, hp: 60,  xp: 350,   attack: 6  },
-  { name: "Troll",         combatLevel: 30, hp: 100, xp: 700,   attack: 12 },
-  { name: "Demon",         combatLevel: 45, hp: 150, xp: 1200,  attack: 18 },
-  { name: "Dragon",        combatLevel: 60, hp: 200, xp: 2000,  attack: 25 },
-  { name: "King Black Dragon", combatLevel: 100, hp: 250, xp: 3000, attack: 40 },
-  { name: "Corporeal Beast",   combatLevel: 126, hp: 400, xp: 5000, attack: 55 },
-  { name: "TzTok-Jad",     combatLevel: 303, hp: 603, xp: 10000, attack: 70 },
+  { name: "Chicken",          combatLevel: 1,   hp: 5,    xp: 50,     attack: 1  },
+  { name: "Goblin",           combatLevel: 3,   hp: 20,   xp: 100,    attack: 2  },
+  { name: "Skeleton",         combatLevel: 8,   hp: 40,   xp: 200,    attack: 4  },
+  { name: "Zombie",           combatLevel: 15,  hp: 60,   xp: 350,    attack: 6  },
+  { name: "Troll",            combatLevel: 30,  hp: 100,  xp: 700,    attack: 12 },
+  { name: "Demon",            combatLevel: 45,  hp: 150,  xp: 1200,   attack: 18 },
+  { name: "Dragon",           combatLevel: 60,  hp: 200,  xp: 2000,   attack: 25 },
+  { name: "King Black Dragon",combatLevel: 100, hp: 250,  xp: 3000,   attack: 40 },
+  { name: "Corporeal Beast",  combatLevel: 126, hp: 400,  xp: 5000,   attack: 55 },
+  { name: "TzTok-Jad",        combatLevel: 303, hp: 603,  xp: 10000,  attack: 70 },
 ];
 
 // ─────────── 2) RuneScape‐Style XP Curve ───────────
@@ -39,10 +37,11 @@ function computeCombatLevel(totalXP) {
   return 99;
 }
 
-// ─────────── 3) Default Profile (Strength + Agility) ───────────
+// ─────────── 3) DEFAULT PROFILE (Strength, Agility, Slayer) ───────────
 const DEFAULT_PROFILE = {
   strength: { xp: 0, level: 1 },
   agility:  { xp: 0, level: 1 },
+  slayer:   { xp: 0, level: 1 },
 };
 
 // ─────────── 4) LocalStorage Keys ───────────
@@ -54,7 +53,6 @@ const ATTACK_KEY  = "workoutAttack";
 function loadProfile() {
   const raw = localStorage.getItem(PROFILE_KEY);
   if (!raw) {
-    // No saved profile → initialize with defaults
     return JSON.parse(JSON.stringify(DEFAULT_PROFILE));
   }
   let saved;
@@ -63,7 +61,6 @@ function loadProfile() {
   } catch {
     saved = {};
   }
-  // Merge: if a key is missing, fill it with default
   const merged = {};
   Object.keys(DEFAULT_PROFILE).forEach((skillName) => {
     if (saved[skillName]) {
@@ -106,7 +103,7 @@ function renderSkill(skillName, data) {
   const nextEl = document.getElementById(`${skillName}-xp-next`);
   const barEl  = document.getElementById(`${skillName}-bar`);
 
-  if (!lvlEl || !xpEl || !nextEl || !barEl) return; // skip if not present
+  if (!lvlEl || !xpEl || !nextEl || !barEl) return;
 
   const { level, xp } = data;
   const needed = xpNeededForLevel(level);
@@ -145,18 +142,14 @@ function renderAttack() {
   el.textContent = loadAttack();
 }
 
-// Render all pieces of data at once
+// Render all pieces of data at once (strength, agility, slayer, gp, etc.)
 function renderAll() {
   const profile = loadProfile();
-  // Strength
   renderSkill("strength", profile.strength);
-  // Agility
-  renderSkill("agility", profile.agility);
-  // GP
+  renderSkill("agility",  profile.agility);
+  renderSkill("slayer",   profile.slayer);
   renderGP();
-  // Combat Level
   renderCombatLevel();
-  // Attack
   renderAttack();
 }
 
@@ -179,64 +172,92 @@ function handleActionClick(event) {
     return;
   }
 
-  // 9b) “Go” button on fight page? (aggregated slider + monster logic)
+  // 9b) “Attack” button on fight page? (aggregated slider + monster logic)
   const goBtn = event.target.closest("#go-btn");
   if (goBtn) {
-    // 1) Determine which monster is selected
-    const monsterIndex = parseInt(document.getElementById("monster-slider").value, 10);
-    const monster      = MONSTERS[monsterIndex] || MONSTERS[0];
-
-    // 2) Award gp: 1 per exercise type (push-ups + squats) + 1 gp for monster defeat
     const pushupsSlider = document.getElementById("pushups-slider");
     const squatsSlider  = document.getElementById("squats-slider");
+    const monsterSlider = document.getElementById("monster-slider");
 
-    let gp = loadGP();
-    // Two exercise types always > 0 (10 default), so +2 gp for exercises
-    gp += 2;
-    // +1 gp for defeating the monster
-    gp += 1;
-    saveGP(gp);
+    if (pushupsSlider && squatsSlider && monsterSlider) {
+      const pushupsCount = parseInt(pushupsSlider.value, 10);
+      const squatsCount  = parseInt(squatsSlider.value, 10);
 
-    // 3) Award Strength XP = pushupsCount + squatsCount + monster.xp
-    const pushupsCount = parseInt(pushupsSlider.value, 10);
-    const squatsCount  = parseInt(squatsSlider.value, 10);
-    const monsterXP    = monster.xp;
+      // 1) Determine which monster is selected
+      const monsterIndex = parseInt(monsterSlider.value, 10);
+      const monster      = MONSTERS[monsterIndex] || MONSTERS[0];
 
-    const totalXP = pushupsCount + squatsCount + monsterXP;
-    const profile = loadProfile();
-    let { xp, level } = profile.strength;
+      // 2) Award gp:
+      //    • +2 gp for doing both exercise types (push-ups + squats)
+      //    • +1 gp for killing the monster
+      let gp = loadGP();
+      gp += 2;     // one gp per exercise type
+      gp += 1;     // one gp for monster defeat
+      saveGP(gp);
 
-    xp += totalXP;
-    while (xp >= xpNeededForLevel(level) && level < 99) {
-      xp -= xpNeededForLevel(level);
-      level += 1;
-      if (level === 99) {
-        xp = 0;
-        break;
+      // 3) Compute total Strength XP from reps:
+      const repXP = pushupsCount + squatsCount;
+
+      // 4) Compute damage to monster: each 10 reps = 1 damage
+      const totalReps = pushupsCount + squatsCount;
+      const damage    = totalReps / 10;
+
+      // 5) Award Strength XP:
+      const profile = loadProfile();
+      let { xp: strXP, level: strLevel } = profile.strength;
+
+      strXP += repXP;
+      while (strXP >= xpNeededForLevel(strLevel) && strLevel < 99) {
+        strXP -= xpNeededForLevel(strLevel);
+        strLevel += 1;
+        if (strLevel === 99) {
+          strXP = 0;
+          break;
+        }
       }
+      profile.strength = { xp: strXP, level: strLevel };
+
+      // 6) If monster is defeated, award monster.xp to Slayer:
+      if (damage >= monster.hp) {
+        let { xp: slayerXP, level: slayerLevel } = profile.slayer;
+        slayerXP += monster.xp;
+        while (slayerXP >= xpNeededForLevel(slayerLevel) && slayerLevel < 99) {
+          slayerXP -= xpNeededForLevel(slayerLevel);
+          slayerLevel += 1;
+          if (slayerLevel === 99) {
+            slayerXP = 0;
+            break;
+          }
+        }
+        profile.slayer = { xp: slayerXP, level: slayerLevel };
+      }
+
+      // 7) Save updated profile
+      saveProfile(profile);
+
+      // 8) Reset sliders & labels, and reset monster slider to 0 (Chicken)
+      pushupsSlider.value = 10;
+      squatsSlider.value  = 10;
+      document.getElementById("pushups-value").textContent = "10";
+      document.getElementById("squats-value").textContent  = "10";
+
+      monsterSlider.value = 0;
+      document.getElementById("monster-name").textContent = MONSTERS[0].name;
+      document.getElementById("monster-cl").textContent   = MONSTERS[0].combatLevel;
+      document.getElementById("monster-hp").textContent   = MONSTERS[0].hp;
+      document.getElementById("monster-xp").textContent   = MONSTERS[0].xp;
+      document.getElementById("monster-atk").textContent  = MONSTERS[0].attack;
     }
-    profile.strength = { xp, level };
-    saveProfile(profile);
-
-    // 4) Reset sliders & labels, and reset monster slider to 0 (Chicken)
-    pushupsSlider.value = 10;
-    squatsSlider.value  = 10;
-    document.getElementById("pushups-value").textContent = "10";
-    document.getElementById("squats-value").textContent  = "10";
-
-    document.getElementById("monster-slider").value = 0;
-    document.getElementById("monster-name").textContent = MONSTERS[0].name;
-    // If displaying monster stats, update those spans here as well.
 
     renderAll();
     return;
   }
 
-  // 9c) Exercise or Run Buttons? (data-skill="strength"/"agility")
+  // 9c) Exercise or Run Buttons? (data-skill="strength" or "agility")
   const btn = event.target.closest("button[data-skill]");
   if (!btn) return;
 
-  const skill = btn.dataset.skill;           // "strength" or "agility"
+  const skill = btn.dataset.skill;           // "strength"/"agility"
   const bonus = parseInt(btn.dataset.xp, 10); // e.g. 10, 100, etc.
 
   // Award 1 gp per exercise/run
@@ -264,7 +285,8 @@ function handleActionClick(event) {
   renderAll();
 }
 
-// ─────────── initSlidersAndMonster() ───────────
+// ─────────── 10) Slider & Monster‐Label Initialization ───────────
+
 function initSlidersAndMonster() {
   const pushupsSlider = document.getElementById("pushups-slider");
   const squatsSlider  = document.getElementById("squats-slider");
@@ -283,23 +305,24 @@ function initSlidersAndMonster() {
     });
   }
   if (monsterSlider) {
+    // Change to 'change' so stats update only after user releases slider
     monsterSlider.addEventListener("change", (e) => {
       const idx = parseInt(e.target.value, 10);
       const mon = MONSTERS[idx] || MONSTERS[0];
 
-      // Update the displayed monster name
+      // Update monster name
       const nameSpan = document.getElementById("monster-name");
       if (nameSpan) nameSpan.textContent = mon.name;
 
-      // Update each individual stat on its own line:
-      const clSpan = document.getElementById("monster-cl");
-      const hpSpan = document.getElementById("monster-hp");
-      const xpSpan = document.getElementById("monster-xp");
+      // Update each stat line
+      const clSpan  = document.getElementById("monster-cl");
+      const hpSpan  = document.getElementById("monster-hp");
+      const xpSpan  = document.getElementById("monster-xp");
       const atkSpan = document.getElementById("monster-atk");
 
-      if (clSpan) clSpan.textContent = mon.combatLevel;
-      if (hpSpan) hpSpan.textContent = mon.hp;
-      if (xpSpan) xpSpan.textContent = mon.xp;
+      if (clSpan)  clSpan.textContent  = mon.combatLevel;
+      if (hpSpan)  hpSpan.textContent  = mon.hp;
+      if (xpSpan)  xpSpan.textContent  = mon.xp;
       if (atkSpan) atkSpan.textContent = mon.attack;
     });
   }
