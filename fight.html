@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brankscape • Fight</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Monster HP bar styling */
+    .hp-bar-container {
+      position: relative;
+      width: 100%;
+      max-width: 300px;       /* adjust as needed */
+      height: 20px;
+      border: 2px solid #543f1f; /* OSRS‐style border */
+      border-radius: 4px;
+      background-color: #3AAD3A; /* green = full HP */
+      overflow: hidden;
+      margin: 0.5rem auto;
+    }
+    .hp-damage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background-color: #B01E0E; /* red = damage */
+    }
+  </style>
 </head>
 <body>
   <div class="content">
@@ -24,9 +46,15 @@
           value="0"
         />
       </div>
+
       <div class="monster-stats">
         <p>Combat Level: <span id="monster-cl">1</span></p>
-        <p>HP: <span id="monster-hp">5</span></p>
+
+        <!-- HP bar replaces “HP: X” -->
+        <div class="hp-bar-container">
+          <div class="hp-damage" id="monster-hp-bar"></div>
+        </div>
+
         <p>Slayer XP: <span id="monster-xp">50</span></p>
         <p>Attack: <span id="monster-atk">1</span></p>
       </div>
@@ -119,7 +147,7 @@
 
       <!-- Live Damage Display (sliderDamage + userAttack in brackets) -->
       <p style="text-align: center; font-weight: bold; margin-bottom: 1rem;">
-        Damage: <span id="damage-value">0 (+5)</span>
+        Damage: <span id="damage-value">0 (+<span id="attack-count">1</span>)</span>
       </p>
 
       <!-- Attack Button -->
@@ -135,5 +163,6 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script src="js/fight-extras.js"></script>
 </body>
 </html>
