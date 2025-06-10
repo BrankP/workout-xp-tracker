@@ -6,7 +6,7 @@
   <title>Brankscape • Track</title>
   <link rel="stylesheet" href="css/styles.css" />
   <style>
-    /* Simple styling for the video feed */
+    /* Styling for the feed */
     .feed-section {
       max-width: 400px;
       margin: 1rem auto;
@@ -17,6 +17,34 @@
       border: 2px solid #543f1f;
       border-radius: 4px;
       background: #000;
+    }
+
+    /* Exercise Log */
+    .log-section {
+      max-width: 400px;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: rgba(224, 217, 194, 0.8);
+      border: 2px solid #543f1f;
+      border-top-color: #8b6d48;
+      border-left-color: #8b6d48;
+      border-radius: 4px;
+      box-shadow: 0 2px 0 #543f1f;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.9rem;
+    }
+    .log-section h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+    .log-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 0;
+    }
+    .log-section li {
+      margin: 0.25rem 0;
     }
   </style>
 </head>
@@ -29,14 +57,26 @@
       <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
     </section>
 
+    <!-- Exercise Log -->
+    <section class="log-section">
+      <h2>Exercise Log</h2>
+      <ul>
+        <li>10 Push-ups logged at 10:05 AM</li>
+        <li>20 Squats logged at 10:12 AM</li>
+        <li>5 Lunges logged at 10:20 AM</li>
+      </ul>
+    </section>
+
     <!-- Back Button -->
     <button class="back-btn" onclick="location.href='index.html'">
       ← Back
     </button>
   </div>
 
+  <script src="js/main.js"></script>
+  <script src="js/fight-extras.js"></script>
   <script>
-    // On page load, request camera permissions and start streaming if granted
+    // Camera‐feed init (as before)
     document.addEventListener("DOMContentLoaded", () => {
       const video = document.getElementById("video");
       const status = document.getElementById("feed-status");
@@ -47,9 +87,7 @@
       }
 
       navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-          video.srcObject = stream;
-        })
+        .then(stream => { video.srcObject = stream; })
         .catch(err => {
           console.error("Error accessing camera:", err);
           if (err.name === "NotAllowedError") {
