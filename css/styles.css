@@ -203,3 +203,21 @@ body {
   margin: 0.25rem 0;  /* less vertical margin */
   font-size: 0.95rem;
 }
+
+/* Responsive Feed Section */
+.feed-section {
+  width: 100%;            /* fill the container */
+  max-width: 600px;       /* optional cap on large screens */
+  margin: 1rem auto;
+}
+
+/* Make the video fill width and maintain a 4:3 aspect ratio */
+.feed-section video {
+  width: 100%;
+  aspect-ratio: 4 / 3;    /* keeps height = width * 3/4 */
+  max-height: 50vh;       /* optional cap: at most half the viewport height */
+  border: 2px solid #543f1f;
+  border-radius: 4px;
+  background: #000;
+  object-fit: cover;      /* crop/scale to fill the box */
+}
