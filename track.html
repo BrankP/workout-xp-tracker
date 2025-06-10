@@ -6,6 +6,7 @@
   <title>Brankscape • Track</title>
   <link rel="stylesheet" href="css/styles.css" />
   <style>
+    /* Feed Section */
     .feed-section {
       max-width: 400px;
       margin: 1rem auto;
@@ -20,6 +21,8 @@
       border-radius: 4px;
       background: #000;
     }
+
+    /* Exercise Log */
     .log-section {
       max-width: 400px;
       margin: 1rem auto;
@@ -70,15 +73,15 @@
     </button>
   </div>
 
-  <!-- MediaPipe Dependencies -->
+  <!-- 1) MediaPipe Pose -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
+  <!-- 2) MediaPipe Camera Utils (defines Camera) -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.2/camera_utils.js"></script>
 
-  <!-- Core logic -->
+  <!-- 3) Core application scripts -->
   <script src="js/main.js"></script>
   <script src="js/fight-extras.js"></script>
-
-  <!-- Pose‐tracking & logging -->
+  <!-- 4) Tracking logic (relies on Camera being defined) -->
   <script src="js/track-extras.js"></script>
 </body>
 </html>
