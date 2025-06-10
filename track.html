@@ -6,82 +6,50 @@
   <title>Brankscape • Track</title>
   <link rel="stylesheet" href="css/styles.css" />
   <style>
-    /* Feed Section */
     .feed-section {
-      max-width: 400px;
-      margin: 1rem auto;
-      text-align: center;
+      max-width: 400px; margin: 1rem auto; text-align: center;
     }
     .feed-section video {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      max-height: 50vh;
-      object-fit: cover;
-      border: 2px solid #543f1f;
-      border-radius: 4px;
-      background: #000;
+      width: 100%; aspect-ratio: 4/3; max-height: 50vh;
+      object-fit: cover; border: 2px solid #543f1f;
+      border-radius: 4px; background: #000;
     }
-
-    /* Exercise Log */
     .log-section {
-      max-width: 400px;
-      margin: 1rem auto;
-      padding: 1rem;
-      background: rgba(224,217,194,0.8);
-      border: 2px solid #543f1f;
-      border-top-color: #8b6d48;
-      border-left-color: #8b6d48;
-      border-radius: 4px;
-      box-shadow: 0 2px 0 #543f1f;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 0.9rem;
+      max-width: 400px; margin: 1rem auto; padding: 1rem;
+      background: rgba(224,217,194,0.8); border: 2px solid #543f1f;
+      border-top-color: #8b6d48; border-left-color: #8b6d48;
+      border-radius: 4px; box-shadow: 0 2px 0 #543f1f;
+      font-family: "Courier New", Courier, monospace; font-size: 0.9rem;
     }
-    .log-section h2 {
-      margin-top: 0;
-      font-size: 1.25rem;
-      text-align: center;
-    }
-    .log-section ul {
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0 0 0;
-    }
-    .log-section li {
-      margin: 0.25rem 0;
-    }
+    .log-section h2 { margin-top: 0; font-size: 1.25rem; text-align: center; }
+    .log-section ul { list-style: none; padding: 0; margin: 0.5rem 0 0 0; }
+    .log-section li { margin: 0.25rem 0; }
   </style>
 </head>
 <body>
   <div class="content">
-    <!-- Feed Section -->
     <section class="skill-card feed-section">
       <video id="video" autoplay muted playsinline></video>
       <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
     </section>
 
-    <!-- Exercise Log -->
     <section class="log-section">
       <h2>Exercises Logged</h2>
-      <ul id="exercise-log">
-        <li>None</li>
-      </ul>
+      <ul id="exercise-log"><li>None</li></ul>
     </section>
 
-    <!-- Back Button -->
-    <button class="back-btn" onclick="location.href='index.html'">
-      ← Back
-    </button>
+    <button class="back-btn" onclick="location.href='index.html'">← Back</button>
   </div>
 
   <!-- 1) MediaPipe Pose -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
-  <!-- 2) MediaPipe Camera Utils (defines Camera) -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.2/camera_utils.js"></script>
+  <!-- 2) Matching MediaPipe Camera Utils v0.5 -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.5/camera_utils.js"></script>
 
-  <!-- 3) Core application scripts -->
+  <!-- 3) Core logic -->
   <script src="js/main.js"></script>
   <script src="js/fight-extras.js"></script>
-  <!-- 4) Tracking logic (relies on Camera being defined) -->
+  <!-- 4) Tracking logic -->
   <script src="js/track-extras.js"></script>
 </body>
 </html>
