@@ -14,6 +14,9 @@
     }
     .feed-section video {
       width: 100%;
+      aspect-ratio: 4 / 3;
+      max-height: 50vh;
+      object-fit: cover;
       border: 2px solid #543f1f;
       border-radius: 4px;
       background: #000;
@@ -51,20 +54,16 @@
 <body>
   <div class="content">
     <!-- Feed Section -->
-	<section class="skill-card feed-section">
-	  <video id="video" autoplay playsinline muted></video>
-	  <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
-	</section>
+    <section class="skill-card feed-section">
+      <video id="video" autoplay muted playsinline></video>
+      <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
+    </section>
 
     <!-- Exercise Log -->
     <section class="log-section">
       <h2>Exercises Logged</h2>
       <ul>
-        <li>Push up! +10xp</li>
-		<li>Push up! +10xp</li>
-		<li>Squat! +5xp</li>
-		<li>Squat! +5xp</li>
-		<li>Squat! +5xp</li>
+        <li>None</li>
       </ul>
     </section>
 
@@ -77,7 +76,7 @@
   <script src="js/main.js"></script>
   <script src="js/fight-extras.js"></script>
   <script>
-    // Camera‐feed init (as before)
+    // Camera‐feed init
     document.addEventListener("DOMContentLoaded", () => {
       const video = document.getElementById("video");
       const status = document.getElementById("feed-status");
@@ -88,7 +87,10 @@
       }
 
       navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => { video.srcObject = stream; })
+        .then(stream => {
+          video.srcObject = stream;
+          return video.play().catch(() => {});
+        })
         .catch(err => {
           console.error("Error accessing camera:", err);
           if (err.name === "NotAllowedError") {
