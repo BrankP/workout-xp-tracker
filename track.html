@@ -62,7 +62,7 @@
     <!-- Exercise Log -->
     <section class="log-section">
       <h2>Exercises Logged</h2>
-      <ul>
+      <ul id="exercise-log">
         <li>None</li>
       </ul>
     </section>
@@ -73,52 +73,15 @@
     </button>
   </div>
 
+  <!-- MediaPipe Pose -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.2/camera_utils.js"></script>
+
+  <!-- Core logic -->
   <script src="js/main.js"></script>
   <script src="js/fight-extras.js"></script>
-  <script>
-    const video = document.getElementById("video");
-    const status = document.getElementById("feed-status");
 
-    async function initCamera() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        status.textContent = "Camera API not supported in this browser.";
-        return;
-      }
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        // Don't call video.play() here—defer to user gesture
-      } catch (err) {
-        console.error("Error accessing camera:", err);
-        status.textContent = err.name === "NotAllowedError"
-          ? "Camera access was denied. Please allow access and reload."
-          : "Unable to access camera: " + err.message;
-      }
-    }
-
-    // On mobile Chrome, autoplay (even muted) often needs a user gesture:
-    function setupPlayOnGesture() {
-      function attemptPlay() {
-        video.play().catch(() => {});
-        // Remove these listeners after first attempt
-        video.removeEventListener("click", attemptPlay);
-        video.removeEventListener("touchstart", attemptPlay);
-      }
-      video.addEventListener("click", attemptPlay);
-      video.addEventListener("touchstart", attemptPlay);
-    }
-
-    // If user locks/unlocks (tab becomes visible), re-play
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && video.srcObject) {
-        video.play().catch(() => {});
-      }
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initCamera();
-      setupPlayOnGesture();
-    });
-  </script>
+  <!-- Tracking extras -->
+  <script src="js/track-extras.js"></script>
 </body>
 </html>
