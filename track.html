@@ -5,19 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brankscape • Track</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Simple styling for the video feed */
+    .feed-section {
+      max-width: 400px;
+      margin: 1rem auto;
+      text-align: center;
+    }
+    .feed-section video {
+      width: 100%;
+      border: 2px solid #543f1f;
+      border-radius: 4px;
+      background: #000;
+    }
+  </style>
 </head>
 <body>
   <div class="content">
-    <!-- Placeholder page -->
-    <section class="skill-card">
-      <h2>Track</h2>
-      <p>This page is under construction.</p>
+    <!-- Feed Section -->
+    <section class="skill-card feed-section">
+      <h2>Feed</h2>
+      <video id="video" autoplay playsinline></video>
+      <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
     </section>
+
+    <!-- Back Button -->
     <button class="back-btn" onclick="location.href='index.html'">
       ← Back
     </button>
   </div>
 
-  <script src="js/main.js"></script>
+  <script>
+    // On page load, request camera permissions and start streaming if granted
+    document.addEventListener("DOMContentLoaded", () => {
+      const video = document.getElementById("video");
+      const status = document.getElementById("feed-status");
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        status.textContent = "Camera API not supported in this browser.";
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+        })
+        .catch(err => {
+          console.error("Error accessing camera:", err);
+          if (err.name === "NotAllowedError") {
+            status.textContent = "Camera access was denied. Please allow access and reload.";
+          } else {
+            status.textContent = "Unable to access camera: " + err.message;
+          }
+        });
+    });
+  </script>
 </body>
 </html>
