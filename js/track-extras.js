@@ -1,140 +1,85 @@
-// js/track-extras.js
-
-// Grab DOM elements
-const video = document.getElementById("video");
-const status = document.getElementById("feed-status");
-const logUl = document.getElementById("exercise-log");
-
-// Helper to prepend an entry (real or debug)
-function appendLog(text, isDebug = false) {
-  // If first entry is “None”, clear it
-  if (logUl.children[0]?.textContent === "None") {
-    logUl.innerHTML = "";
-  }
-  const li = document.createElement("li");
-  li.textContent = isDebug ? `DEBUG: ${text}` : text;
-  if (isDebug) li.style.color = "#888";
-  logUl.prepend(li);
-}
-
-// Utility: compute angle at point B between BA and BC
-function angle(a, b, c) {
-  const ab = { x: a.x - b.x, y: a.y - b.y };
-  const cb = { x: c.x - b.x, y: c.y - b.y };
-  const dot = ab.x * cb.x + ab.y * cb.y;
-  const mag = Math.hypot(ab.x, ab.y) * Math.hypot(cb.x, cb.y);
-  return Math.acos(dot / mag) * (180 / Math.PI);
-}
-
-// Simple push-up detection state
-let lastRepTime = 0;
-let pushupDown = false;
-let lastDebugTime = 0;
-
-// Called on each frame by MediaPipe Pose
-function onPoseResults(results) {
-  if (!results.poseLandmarks) return;
-  const now = Date.now();
-
-  // Debug elbow angle ~every 200ms
-  if (now - lastDebugTime > 200) {
-    const lElbow  = results.poseLandmarks[13];
-    const lShould = results.poseLandmarks[11];
-    const lWrist  = results.poseLandmarks[15];
-    const elbowAngle = angle(lWrist, lElbow, lShould);
-    appendLog(`elbowAngle=${elbowAngle.toFixed(1)}`, true);
-    lastDebugTime = now;
-  }
-
-  // Throttle rep detection to once per second
-  if (now - lastRepTime < 1000) return;
-
-  const lElbow  = results.poseLandmarks[13];
-  const lShould = results.poseLandmarks[11];
-  const lWrist  = results.poseLandmarks[15];
-  const elbowAngle = angle(lWrist, lElbow, lShould);
-
-  // Down phase
-  if (elbowAngle < 90) {
-    if (!pushupDown) {
-      appendLog("pushupDown = true", true);
-      pushupDown = true;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brankscape • Track</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Feed Section */
+    .feed-section {
+      max-width: 400px;
+      margin: 1rem auto;
+      text-align: center;
     }
-  }
+    .feed-section video {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      max-height: 50vh;
+      object-fit: cover;
+      border: 2px solid #543f1f;
+      border-radius: 4px;
+      background: #000;
+    }
 
-  // Up phase → count rep
-  if (pushupDown && elbowAngle > 160) {
-    appendLog("pushup detected", true);
-    pushupDown = false;
-    lastRepTime = now;
-    logExercise("Push up", 10);
-  }
-}
+    /* Exercise Log */
+    .log-section {
+      max-width: 400px;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: rgba(224, 217, 194, 0.8);
+      border: 2px solid #543f1f;
+      border-top-color: #8b6d48;
+      border-left-color: #8b6d48;
+      border-radius: 4px;
+      box-shadow: 0 2px 0 #543f1f;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.9rem;
+    }
+    .log-section h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+    .log-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 0;
+    }
+    .log-section li {
+      margin: 0.25rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <!-- Feed Section -->
+    <section class="skill-card feed-section">
+      <video id="video" autoplay muted playsinline></video>
+      <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
+    </section>
 
-// Log an exercise: update UI + award XP & gp
-function logExercise(name, xp) {
-  appendLog(`${name}! +${xp} xp`);
-  // Award XP to Strength
-  const profile = loadProfile();
-  let { xp: strXP, level: strLevel } = profile.strength;
-  strXP += xp;
-  while (strXP >= xpNeededForLevel(strLevel) && strLevel < 99) {
-    strXP -= xpNeededForLevel(strLevel);
-    strLevel++;
-  }
-  profile.strength = { xp: strXP, level: strLevel };
-  saveProfile(profile);
+    <!-- Exercise Log -->
+    <section class="log-section">
+      <h2>Exercises Logged</h2>
+      <ul id="exercise-log">
+        <li>None</li>
+      </ul>
+    </section>
 
-  // Award 1 gp
-  let gp = loadGP();
-  gp++;
-  saveGP(gp);
+    <!-- Back Button -->
+    <button class="back-btn" onclick="location.href='index.html'">
+      ← Back
+    </button>
+  </div>
 
-  renderAll();
-}
+  <!-- MediaPipe Pose and Camera Utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.2/camera_utils.js"></script>
 
-// Initialize the camera (prompt user) and attach to video
-async function initCamera() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    status.textContent = "Camera API not supported in this browser.";
-    return false;
-  }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    video.srcObject = stream;
-    return true;
-  } catch (err) {
-    console.error("Error accessing camera:", err);
-    status.textContent = err.name === "NotAllowedError"
-      ? "Camera access was denied. Please allow access and reload."
-      : "Unable to access camera: " + err.message;
-    return false;
-  }
-}
-
-// Set up MediaPipe Pose and start detection
-function startPoseDetection() {
-  const pose = new Pose({
-    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
-  });
-  pose.setOptions({
-    modelComplexity: 0,
-    smoothLandmarks: true,
-    minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5
-  });
-  pose.onResults(onPoseResults);
-
-  const cameraFeed = new Camera(video, {
-    onFrame: async () => await pose.send({ image: video }),
-    width: 640,
-    height: 480
-  });
-  cameraFeed.start();
-}
-
-// On page load, initialize
-document.addEventListener("DOMContentLoaded", async () => {
-  const ok = await initCamera();
-  if (ok) startPoseDetection();
-});
+  <!-- Core application scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/fight-extras.js"></script>
+  <script src="js/track-extras.js"></script>
+</body>
+</html>
