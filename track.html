@@ -6,6 +6,7 @@
   <title>Brankscape • Track</title>
   <link rel="stylesheet" href="css/styles.css" />
   <style>
+    /* Feed Section */
     .feed-section {
       max-width: 400px; margin: 1rem auto; text-align: center;
     }
@@ -14,6 +15,7 @@
       object-fit: cover; border: 2px solid #543f1f;
       border-radius: 4px; background: #000;
     }
+    /* Exercise Counters */
     .log-section {
       max-width: 400px; margin: 1rem auto; padding: 1rem;
       background: rgba(224,217,194,0.8); border: 2px solid #543f1f;
@@ -21,34 +23,41 @@
       border-radius: 4px; box-shadow: 0 2px 0 #543f1f;
       font-family: "Courier New", Courier, monospace; font-size: 0.9rem;
     }
-    .log-section h2 { margin-top: 0; font-size: 1.25rem; text-align: center }
-    .log-section ul { list-style: none; padding: 0; margin: 0.5rem 0 0 0 }
-    .log-section li { margin: 0.25rem 0 }
+    .log-section h2 {
+      margin-top: 0; font-size: 1.25rem; text-align: center;
+    }
+    .log-section p {
+      margin: 0.4rem 0;
+    }
   </style>
 </head>
 <body>
   <div class="content">
+    <!-- Feed Section -->
     <section class="skill-card feed-section">
       <video id="video" autoplay muted playsinline></video>
       <p id="feed-status" style="color: red; font-size: 0.9rem;"></p>
     </section>
 
+    <!-- Exercise Counters -->
     <section class="log-section">
-      <h2>Exercises Logged</h2>
-      <ul id="exercise-log"><li>None</li></ul>
+      <h2>Exercises Completed</h2>
+      <p>Push up: <span id="pushup-count">0</span></p>
+      <!-- future exercises could go here -->
     </section>
 
+    <!-- Back Button -->
     <button class="back-btn" onclick="location.href='index.html'">← Back</button>
   </div>
 
-  <!-- MediaPipe Pose only -->
+  <!-- MediaPipe Pose -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
 
-  <!-- Core + fight-extras -->
+  <!-- Core scripts -->
   <script src="js/main.js"></script>
   <script src="js/fight-extras.js"></script>
 
-  <!-- Updated track-extras.js -->
+  <!-- Tracking logic -->
   <script src="js/track-extras.js"></script>
 </body>
 </html>

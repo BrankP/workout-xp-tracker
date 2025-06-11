@@ -2,25 +2,19 @@
 
 const video = document.getElementById("video");
 const status = document.getElementById("feed-status");
-const logUl = document.getElementById("exercise-log");
-const MAX_LOG_ITEMS = 10;
 
-function appendLog(text, debug = false) {
-  // Clear “None” placeholder if present
-  if (logUl.children[0]?.textContent === "None") logUl.innerHTML = "";
+// Counter for push-ups
+let pushupCount = 0;
 
-  const li = document.createElement("li");
-  li.textContent = debug ? `DEBUG: ${text}` : text;
-  if (debug) li.style.color = "#888";
-  logUl.prepend(li);
-
-  // If too many items, remove the oldest
-  while (logUl.children.length > MAX_LOG_ITEMS) {
-    logUl.removeChild(logUl.lastElementChild);
+// Update the on‐page counter
+function updateCounter(name) {
+  if (name === "Push up") {
+    pushupCount++;
+    document.getElementById("pushup-count").textContent = pushupCount;
   }
 }
 
-// compute angle at B
+// Utility to compute angle at B between BA and BC
 function angle(a,b,c) {
   const ab = {x:a.x-b.x, y:a.y-b.y};
   const cb = {x:c.x-b.x, y:c.y-b.y};
@@ -29,36 +23,37 @@ function angle(a,b,c) {
   return Math.acos(dot/mag)*(180/Math.PI);
 }
 
-let lastRep=0, pushupDown=false, lastDbg=0;
+let lastRep=0, pushupDown=false;
 
+// Handle Pose results
 function onResults(results) {
   if (!results.poseLandmarks) return;
   const now = Date.now();
 
-  if (now - lastDbg > 200) {
-    const lm = results.poseLandmarks;
-    const elb = angle(lm[15], lm[13], lm[11]);
-    appendLog(`elbowAngle=${elb.toFixed(1)}`, true);
-    lastDbg = now;
-  }
+  // Throttle to ≤1 rep/sec
   if (now - lastRep < 1000) return;
 
   const lm = results.poseLandmarks;
-  const elb = angle(lm[15], lm[13], lm[11]);
-  if (elb < 90 && !pushupDown) {
-    appendLog("pushupDown = true", true);
+  const elbAngle = angle(lm[15], lm[13], lm[11]);
+
+  // Detect “down” phase
+  if (elbAngle < 90 && !pushupDown) {
     pushupDown = true;
   }
-  if (pushupDown && elb > 160) {
-    appendLog("pushup detected", true);
+  // Detect “up” phase → count rep
+  if (pushupDown && elbAngle > 160) {
     pushupDown = false;
     lastRep = now;
     logExercise("Push up", 10);
   }
 }
 
+// Log and award
 function logExercise(name, xp) {
-  appendLog(`${name}! +${xp} xp`);
+  // 1) Update counter
+  updateCounter(name);
+
+  // 2) Award XP & gp
   const profile = loadProfile();
   let { xp: strXP, level: strLevel } = profile.strength;
   strXP += xp;
@@ -73,34 +68,38 @@ function logExercise(name, xp) {
   renderAll();
 }
 
+// Initialize camera + Pose
 async function init() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    status.textContent = "Camera API not supported.";
+    return;
+  }
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({video:true});
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
     await video.play();
-    requestAnimationFrame(runPose);
   } catch (err) {
-    console.error(err);
-    status.textContent = "Camera access denied or unavailable.";
+    status.textContent = "Camera access denied.";
+    return;
   }
+
+  const pose = new Pose({
+    locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${f}`
+  });
+  pose.setOptions({
+    modelComplexity:0,
+    smoothLandmarks:true,
+    minDetectionConfidence:0.5,
+    minTrackingConfidence:0.5
+  });
+  pose.onResults(onResults);
+
+  // feed video frames to pose
+  async function frameLoop() {
+    await pose.send({ image: video });
+    requestAnimationFrame(frameLoop);
+  }
+  frameLoop();
 }
 
-async function runPose() {
-  await pose.send({image:video});
-  requestAnimationFrame(runPose);
-}
-
-// Initialize MediaPipe Pose
-const pose = new Pose({
-  locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${f}`
-});
-pose.setOptions({
-  modelComplexity:0,
-  smoothLandmarks:true,
-  minDetectionConfidence:0.5,
-  minTrackingConfidence:0.5
-});
-pose.onResults(onResults);
-
-// Kick things off on load
 document.addEventListener("DOMContentLoaded", init);
