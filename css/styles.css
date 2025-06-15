@@ -477,3 +477,38 @@ body {
   width: 32px;
   height: 32px;
 }
+
+/* ─── Tighter Grid Spacing ─── */
+.card-grid {
+  gap: 0.25rem;   /* reduce from 0.5rem to 0.25rem */
+}
+
+/* ─── Health & XP Sections ─── */
+/* Move labels to left, remove extra padding */
+.health-section,
+.xp-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left-align everything */
+  padding: 0;              /* remove cell padding */
+}
+
+/* Label styling */
+.health-label,
+.xp-label {
+  text-align: left;
+  margin: 0 0 0.25rem 0;
+}
+
+/* Remove the panel borders around the bars */
+.health-section .bar,
+.xp-section     .bar {
+  border: none !important;
+  box-shadow: none;
+  background: #543f1f; /* keep your dark background if desired */
+}
+
+/* Optional: tighten the char-image padding too */
+.character-card .char-image {
+  padding: 0.25rem !important;
+}
