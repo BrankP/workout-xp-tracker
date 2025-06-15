@@ -362,7 +362,7 @@ body {
 /* ─── F1:F2 GP Count ─── */
 .gp-count {
   grid-column: 6;
-  grid-row: 2;
+  grid-row: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
