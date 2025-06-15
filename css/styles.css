@@ -309,7 +309,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-top: 2rem;
+  padding-top: 2.3rem;
 }
 .xp-label {
   font-size: 0.85rem;
