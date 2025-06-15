@@ -1,20 +1,20 @@
 <!-- char-card.html -->
 <div class="character-card">
   <div class="card-grid">
-    <!-- A1:B4: Character image placeholder -->
-    <div class="char-image" data-placeholder>
+    <!-- A1:B4: Character image (scaled down, no border) -->
+    <div class="char-image">
       <img src="assets/character.png" alt="Character">
     </div>
 
-    <!-- C1:E1: Health bar -->
-    <div class="health-bar">
-      <label>Health</label>
+    <!-- C1:E1: Health label + bar -->
+    <div class="health-section">
+      <div class="health-label">Health</div>
       <div class="bar bar--health"><div class="fill"></div></div>
     </div>
 
-    <!-- C2:E2: XP bar -->
-    <div class="xp-bar">
-      <label>XP</label>
+    <!-- C2:E2: Experience label + bar -->
+    <div class="xp-section">
+      <div class="xp-label">Experience</div>
       <div class="bar bar--xp"><div class="fill"></div></div>
     </div>
 
@@ -42,9 +42,9 @@
       <span class="lvl">1/99</span>
     </div>
 
-    <!-- F1:F2: GP count -->
+    <!-- F1:F2: GP icon + amount -->
     <div class="gp-count">
-      <label>GP</label>
+      <img src="assets/GPIcon.png" alt="Gold Pieces">
       <span class="amount">0</span>
     </div>
   </div>
