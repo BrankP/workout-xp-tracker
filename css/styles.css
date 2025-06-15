@@ -319,3 +319,37 @@ body {
   font-weight: bold;
   margin-top: 0.25rem;
 }
+
+/* 1) Ensure the card always sits at the top of .content */
+.character-card {
+  /* if your .content has padding/margin, you can override here */
+  margin-top: 0;
+}
+
+/* 2) Scale the character portrait to fill A1:B4 nicely */
+.char-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* letterbox if needed */
+}
+
+/* 3) Increase skill‐icon sizes to 32×32px */
+.skill img {
+  width: 32px;
+  height: 32px;
+}
+
+/* 4) Center the icon within its grid cell */
+.skill {
+  justify-content: center;
+  text-align: center;
+}
+
+/* 5) Optionally, constrain the .character-card width on large screens */
+@media (min-width: 768px) {
+  .character-card {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
