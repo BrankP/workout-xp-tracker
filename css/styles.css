@@ -221,3 +221,101 @@ body {
   border-radius: 4px;
   background: #000;        /* fallback while loading */
 }
+
+/* Character Card Base */
+.character-card {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, auto);
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* A1:B4 */
+.char-image {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 4;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* C1:E1: Health bar */
+.health-bar {
+  grid-column: 3 / span 3;
+  grid-row: 1;
+}
+.health-bar .bar {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  background: #543f1f;
+  border: 1px solid #000;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.health-bar .fill {
+  background: red;
+  width: 100%; /* will be set dynamically */
+  height: 100%;
+}
+
+/* C2:E2: XP bar */
+.xp-bar {
+  grid-column: 3 / span 3;
+  grid-row: 2;
+}
+.xp-bar .bar {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  background: #543f1f;
+  border: 1px solid #000;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.xp-bar .fill {
+  background: goldenrod;
+  width: 0%; /* will be set dynamically */
+  height: 100%;
+}
+
+/* C3:C4, D3:D4, E3:E4, F3:F4: Skills */
+.skill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.strength   { grid-column: 3; grid-row: 3 / span 2; }
+.agility    { grid-column: 4; grid-row: 3 / span 2; }
+.slayer     { grid-column: 5; grid-row: 3 / span 2; }
+.constitution{ grid-column: 6; grid-row: 3 / span 2; }
+.skill img {
+  width: 24px;
+  height: 24px;
+}
+.skill .lvl {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+/* F1:F2: GP count */
+.gp-count {
+  grid-column: 6;
+  grid-row: 1 / span 2;
+  text-align: center;
+}
+.gp-count .amount {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0.25rem;
+}
