@@ -18,14 +18,16 @@ async function loadCharacterCard() {
     const currentHP = /* load from your state, e.g. */ 50;
     const maxHP     = /* e.g. */ 100;
     const hpPct = Math.min(100, (currentHP / maxHP) * 100);
-    card.querySelector(".health-bar .fill").style.width = hpPct + "%";
+    //card.querySelector(".health-bar .fill").style.width = hpPct + "%";
+    card.querySelector(".bar--health .fill").style.width = hpPct + "%";
 
     // 2) XP: total xp / xpNeededForLevel → width
     const strengthXP = /* your state */ 120;
     const strengthLvl= /* your state */ 5;
     const nextXP     = xpNeededForLevel(strengthLvl);
     const xpPct      = Math.min(100, (strengthXP / nextXP) * 100);
-    card.querySelector(".xp-bar .fill").style.width = xpPct + "%";
+    //card.querySelector(".xp-bar .fill").style.width = xpPct + "%";
+    card.querySelector(".bar--xp    .fill").style.width = xpPct + "%";
 
     // 3) Each skill level
     const profile = loadProfile();
