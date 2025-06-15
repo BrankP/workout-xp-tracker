@@ -353,3 +353,52 @@ body {
     margin-right: auto;
   }
 }
+
+/* ─── Character Card Panel ─── */
+.character-card {
+  background: #e0d9c2;               /* OSRS–style beige */
+  border: 2px solid #543f1f;         /* dark brown border */
+  border-top-color: #8b6d48;         /* lighter bevel at top */
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f;       /* small bottom shadow */
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* ─── Inner Grid Items ─── */
+.character-card .card-grid > div {
+  /* make each cell look like a mini‐panel */
+  background: #e0d9c2;
+  border: 2px solid #543f1f;
+  border-top-color: #8b6d48;
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* override for bars: keep the inner fill but remove extra padding */
+.character-card .health-bar,
+.character-card .xp-bar {
+  padding: 0;               /* bars manage their own height */
+  box-shadow: none;         /* remove double shadow */
+}
+
+.character-card .health-bar .bar,
+.character-card .xp-bar .bar {
+  margin: 0;                /* align full width */
+}
+
+/* but ensure labels inside bars don’t get panel styling */
+.character-card .health-bar label,
+.character-card .xp-bar label {
+  position: absolute;
+  top: -1.2rem;
+  left: 0;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
