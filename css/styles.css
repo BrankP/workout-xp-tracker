@@ -255,13 +255,14 @@ body {
 /* ─── A1:B4 Char Image ─── */
 .char-image {
   grid-column: 1 / span 2;
-  grid-row: 1 / span 3;
+  grid-row: 1 / span 2;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
   transform: scale(0.7); /* scaled down 30% */
   transform-origin: center;
+  align-self: start;
 }
 .char-image img {
   width: 100%;
