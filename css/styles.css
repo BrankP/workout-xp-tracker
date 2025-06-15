@@ -243,15 +243,15 @@ body {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, auto);
-  gap: 0.125rem;  /* was 0.25rem */
+  grid-template-rows: repeat(3, auto);
+  gap: 0.5rem;  /* was 0.25rem */
   align-items: center;
 }
 
 /* ─── A1:B4 Char Image ─── */
 .char-image {
   grid-column: 1 / span 2;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 3;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -344,15 +344,16 @@ body {
   font-size: 0.85rem;
   font-weight: bold;
 }
-.strength    { grid-column: 3; grid-row: 3 / span 2; }
-.agility     { grid-column: 4; grid-row: 3 / span 2; }
-.slayer      { grid-column: 5; grid-row: 3 / span 2; }
-.constitution{ grid-column: 6; grid-row: 3 / span 2; }
+/* Was: .strength    { grid-column: 3; grid-row: 3 / span 2; } */
+.strength    { grid-column: 3; grid-row: 3; }
+.agility     { grid-column: 4; grid-row: 3; }
+.slayer      { grid-column: 5; grid-row: 3; }
+.constitution{ grid-column: 6; grid-row: 3; }
 
 /* ─── F1:F2 GP Count ─── */
 .gp-count {
   grid-column: 6;
-  grid-row: 1 / span 2;
+  grid-row: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
