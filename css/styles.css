@@ -243,9 +243,13 @@ body {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(3, auto);
-  gap: 0.5rem;  /* was 0.25rem */
-  align-items: center;
+  /* first two rows size to their content, third row wraps tightly around the skill boxes */
+  grid-template-rows: auto auto min-content;
+  /* smaller vertical gap, a bit more horizontal distance */
+  row-gap: 0.25rem;
+  column-gap: 0.5rem;
+  /* pin everything to the top of each cell */
+  align-items: start;
 }
 
 /* ─── A1:B4 Char Image ─── */
