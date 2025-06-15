@@ -222,293 +222,155 @@ body {
   background: #000;        /* fallback while loading */
 }
 
-/* Character Card Base */
+/* ─────────────────────────────────────────────────────────
+   Consolidated Character Card Styles
+───────────────────────────────────────────────────────── */
+
+/* Container Panel */
 .character-card {
-  width: 100%;
-  margin-bottom: 1rem;
+  background: rgba(224,217,194,0.8);
+  border: 2px solid #543f1f;
+  border-top-color: #8b6d48;
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f;
+  padding: 0.75rem;
+  margin: 0 auto 1rem;
+  max-width: 600px;
 }
+
+/* Grid Layout with tight spacing */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(4, auto);
-  gap: 0.5rem;
+  gap: 0.25rem; /* reduced whitespace */
   align-items: center;
 }
 
-/* A1:B4 */
+/* ─── A1:B4 Char Image ─── */
 .char-image {
   grid-column: 1 / span 2;
   grid-row: 1 / span 4;
-  background: #ccc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.9rem;
-  color: #333;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  transform: scale(0.7); /* scaled down 30% */
+  transform-origin: center;
+}
+.char-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-/* C1:E1: Health bar */
-.health-bar {
+/* ─── C1:E1 Health Section ─── */
+.health-section {
   grid-column: 3 / span 3;
   grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left align */
+  padding: 0;
 }
-.health-bar .bar {
-  position: relative;
+.health-label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem;
+}
+.health-section .bar {
   width: 100%;
   height: 12px;
-  background: #543f1f;
-  border: 1px solid #000;
-  border-radius: 3px;
+  background: #543f1f; /* panel border color as background */
+  border: none;
+  box-shadow: none;
   overflow: hidden;
 }
-.health-bar .fill {
+.health-section .fill {
   background: red;
-  width: 100%; /* will be set dynamically */
+  width: 100%; /* set dynamically */
   height: 100%;
 }
 
-/* C2:E2: XP bar */
-.xp-bar {
+/* ─── C2:E2 XP Section ─── */
+.xp-section {
   grid-column: 3 / span 3;
   grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
 }
-.xp-bar .bar {
-  position: relative;
+.xp-label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem;
+}
+.xp-section .bar {
   width: 100%;
   height: 12px;
   background: #543f1f;
-  border: 1px solid #000;
-  border-radius: 3px;
+  border: none;
+  box-shadow: none;
   overflow: hidden;
 }
-.xp-bar .fill {
+.xp-section .fill {
   background: goldenrod;
-  width: 0%; /* will be set dynamically */
+  width: 0%; /* set dynamically */
   height: 100%;
 }
 
-/* C3:C4, D3:D4, E3:E4, F3:F4: Skills */
+/* ─── C3:F4 Skills ─── */
 .skill {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.strength   { grid-column: 3; grid-row: 3 / span 2; }
-.agility    { grid-column: 4; grid-row: 3 / span 2; }
-.slayer     { grid-column: 5; grid-row: 3 / span 2; }
-.constitution{ grid-column: 6; grid-row: 3 / span 2; }
-.skill img {
-  width: 24px;
-  height: 24px;
-}
-.skill .lvl {
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-/* F1:F2: GP count */
-.gp-count {
-  grid-column: 6;
-  grid-row: 1 / span 2;
-  text-align: center;
-}
-.gp-count .amount {
-  display: block;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-top: 0.25rem;
-}
-
-/* 1) Ensure the card always sits at the top of .content */
-.character-card {
-  /* if your .content has padding/margin, you can override here */
-  margin-top: 0;
-}
-
-/* 2) Scale the character portrait to fill A1:B4 nicely */
-.char-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;   /* letterbox if needed */
-}
-
-/* 3) Increase skill‐icon sizes to 32×32px */
-.skill img {
-  width: 32px;
-  height: 32px;
-}
-
-/* 4) Center the icon within its grid cell */
-.skill {
   justify-content: center;
-  text-align: center;
-}
-
-/* 5) Optionally, constrain the .character-card width on large screens */
-@media (min-width: 768px) {
-  .character-card {
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-/* ─── Character Card Panel ─── */
-.character-card {
-  background: #e0d9c2;               /* OSRS–style beige */
-  border: 2px solid #543f1f;         /* dark brown border */
-  border-top-color: #8b6d48;         /* lighter bevel at top */
-  border-left-color: #8b6d48;
-  border-radius: 4px;
-  box-shadow: 0 2px 0 #543f1f;       /* small bottom shadow */
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-/* ─── Inner Grid Items ─── */
-.character-card .card-grid > div {
-  /* make each cell look like a mini‐panel */
-  background: #e0d9c2;
+  background: rgba(224,217,194,0.8);
   border: 2px solid #543f1f;
   border-top-color: #8b6d48;
   border-left-color: #8b6d48;
   border-radius: 4px;
   box-shadow: 0 2px 0 #543f1f;
   padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-/* override for bars: keep the inner fill but remove extra padding */
-.character-card .health-bar,
-.character-card .xp-bar {
-  padding: 0;               /* bars manage their own height */
-  box-shadow: none;         /* remove double shadow */
-}
-
-.character-card .health-bar .bar,
-.character-card .xp-bar .bar {
-  margin: 0;                /* align full width */
-}
-
-/* but ensure labels inside bars don’t get panel styling */
-.character-card .health-bar label,
-.character-card .xp-bar label {
-  position: absolute;
-  top: -1.2rem;
-  left: 0;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-/* 1) Scale character image down by 30%, remove its border/panel styling */
-.character-card .char-image {
-  transform: scale(0.7);
-  transform-origin: center;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-/* ensure the <img> inside fills the container */
-.character-card .char-image img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-/* 2) GP: replace text with icon, center-align */
-.character-card .gp-count {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-}
-.character-card .gp-count img {
-  width: 24px;
-  height: 24px;
-}
-
-/* 3) Health label positioning (above bar) */
-.health-section {
-  grid-column: 3 / span 3;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-}
-.health-label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-  text-align: center;
-}
-.health-section .bar {
-  height: 12px;
-}
-
-/* 4) Experience label positioning */
-.xp-section {
-  grid-column: 3 / span 3;
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-}
-.xp-label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-  text-align: center;
-}
-.xp-section .bar {
-  height: 12px;
-}
-
-/* 5) Skill boxes: ensure they keep the existing panel border */
-.character-card .skill {
-  /* panel styling already applied via .card-grid > div */
-  padding: 0.5rem;
-}
-/* increase icon sizes if desired */
-.character-card .skill img {
+.skill img {
   width: 32px;
   height: 32px;
 }
-
-/* ─── Tighter Grid Spacing ─── */
-.card-grid {
-  gap: 0.25rem;   /* reduce from 0.5rem to 0.25rem */
+.skill .lvl {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: bold;
 }
+.strength    { grid-column: 3; grid-row: 3 / span 2; }
+.agility     { grid-column: 4; grid-row: 3 / span 2; }
+.slayer      { grid-column: 5; grid-row: 3 / span 2; }
+.constitution{ grid-column: 6; grid-row: 3 / span 2; }
 
-/* ─── Health & XP Sections ─── */
-/* Move labels to left, remove extra padding */
-.health-section,
-.xp-section {
+/* ─── F1:F2 GP Count ─── */
+.gp-count {
+  grid-column: 6;
+  grid-row: 1 / span 2;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* left-align everything */
-  padding: 0;              /* remove cell padding */
+  align-items: center;
+  justify-content: center;
+  background: rgba(224,217,194,0.8);
+  border: 2px solid #543f1f;
+  border-top-color: #8b6d48;
+  border-left-color: #8b6d48;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #543f1f;
+  padding: 0.5rem;
 }
-
-/* Label styling */
-.health-label,
-.xp-label {
-  text-align: left;
-  margin: 0 0 0.25rem 0;
+.gp-count img {
+  width: 24px;
+  height: 24px;
 }
-
-/* Remove the panel borders around the bars */
-.health-section .bar,
-.xp-section     .bar {
-  border: none !important;
-  box-shadow: none;
-  background: #543f1f; /* keep your dark background if desired */
-}
-
-/* Optional: tighten the char-image padding too */
-.character-card .char-image {
-  padding: 0.25rem !important;
+.gp-count .amount {
+  margin-top: 0.25rem;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
