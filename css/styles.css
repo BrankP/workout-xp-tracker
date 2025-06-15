@@ -255,20 +255,24 @@ body {
 /* ─── A1:B4 Char Image ─── */
 .char-image {
   grid-column: 1 / span 2;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 4;  /* portrait spans full height */
+  padding: 0;            /* no internal padding */
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  padding: 0 !important;
-  transform: scale(0.7); /* scaled down 30% */
-  transform-origin: center;
-  align-self: start;
+  align-self: start;     /* stick to top, so no extra bottom gap */
+  justify-self: center;  /* horizontally center container */
 }
+
+/* ─── Scale the image itself, not the container ─── */
 .char-image img {
-  width: 100%;
+  width: 70%;            /* scale portrait to 70% of its cell */
   height: auto;
   object-fit: contain;
+  display: block;
+  margin: 0 auto;        /* center inside cell */
 }
+
 
 /* ─── C1:E1 Health Section ─── */
 .health-section {
