@@ -244,9 +244,9 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   /* first two rows size to their content, third row wraps tightly around the skill boxes */
-  grid-template-rows: auto auto min-content;
+  grid-template-rows: auto auto min-content 0;
   /* smaller vertical gap, a bit more horizontal distance */
-  row-gap: 0.25rem;
+  row-gap: 0.5rem;
   column-gap: 0.5rem;
   /* pin everything to the top of each cell */
   align-items: start;
@@ -255,7 +255,7 @@ body {
 /* ─── A1:B4 Char Image ─── */
 .char-image {
   grid-column: 1 / span 2;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 4;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
