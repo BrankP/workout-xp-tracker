@@ -234,8 +234,8 @@ body {
   border-left-color: #8b6d48;
   border-radius: 4px;
   box-shadow: 0 2px 0 #543f1f;
-  padding: 0.75rem;
-  margin: 0 auto 1rem;
+  padding: 0.2rem; /* was 0.75rem */
+  margin: 0.5rem auto; /* was 0 auto 1rem; */
   max-width: 600px;
 }
 
@@ -244,7 +244,7 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(4, auto);
-  gap: 0.25rem; /* reduced whitespace */
+  gap: 0.125rem;  /* was 0.25rem */
   align-items: center;
 }
 
