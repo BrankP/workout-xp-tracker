@@ -236,7 +236,7 @@ body {
   box-shadow: 0 2px 0 #543f1f;
   padding: 0.5rem; /* was 0.75rem */
   margin: 0.5rem auto; /* was 0 auto 1rem; */
-  max-width: 600px;
+  max-width: 400px;
 }
 
 /* Grid Layout with tight spacing */
@@ -266,7 +266,7 @@ body {
 
 /* ─── Scale the image itself, not the container ─── */
 .char-image img {
-  width: 70%;            /* scale portrait to 70% of its cell */
+  width: 75%;            /* scale portrait to 70% of its cell */
   height: auto;
   object-fit: contain;
   display: block;
